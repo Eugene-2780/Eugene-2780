@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<meta name="viewport" content="width=device-width">
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>English Dictionary</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+
+
+
+<html charset="UTF-8">
+
+<head>
+    <style>
+    </style>
+</head>
+
+<body>
+    <form action="/dic_add" method="POST" target="rsp">
+
+        <table align=center width='100%' border=4>
+            <tr>
+                <td><label for="en">English:</label></td>
+                <td>
+                    <input size='55' type="text" value="" id="en" name="en" autocomplete="off" onchange="" />
+                    <input type="button" name="button" value="Clear"
+                        onclick="document.getElementById('en').value = ''" />
+                </td>
+                <td align='center'> <input style="width:140px;" type="submit" name="button" value="Read"
+                        onclick="dicRead()" />
+                </td>
+            </tr>
+            <tr>
+                <td><label for="ru">Russian:</label></td>
+                <td>
+                    <input size='55' type="text" value="" id="ru" name="ru" />
+                    <input type="button" name="button" value="Clear"
+                        onclick="document.getElementById('ru').value = ''" />
+                </td>
+                <td align='center'> <input style="width:140px;" type="submit" name="button" value="Add"
+                        onclick="dicAdd()" />
+                </td>
+            </tr>
+            <tr>
+                <td><label for="cat">Category:</label></td>
+                <td>
+                    <input list="Categories" size='55' id="cat" name="cat" value="Human.trait" >
+                    <datalist id="Categories">
+                        <option value="Human.emotions">
+                        <option value="Human.trait">
+                        <option value="Home">
+                        <option value="Weather">
+                        <option value="Greeting">
+                        <option value="Other">
+                    </datalist>
+                    <input type="button" name="button" value="Clear"
+                        onclick="document.getElementById('cat').value = ''" />
+
+                </td>
+            </tr>
+        </table>
+    </form>
+
+    <!--Responce Table-->
+    <table width='100%' height='500' border=1>
+        <tr>
+            <td>
+                <p align='left'>Response:</p>
+                <iframe title="frame" id=rsp name="rsp" width=100% height='600'></iframe>
+            </td>
+        </tr>
+    </table>
+
+    <script>
+
+        function ajaxShowResponse() {
+            var frm = document.getElementById('rsp');
+            var doc = frm.contentDocument;
+
+            let json = JSON.parse(this.responseText);
+            let s = this.responseText;
+            doc.write(s);
+            doc.close();
+
+            document.getElementById('eu').value = json.eu;
+            document.getElementById('ru').value = json.ru;
+        }
+
+        function ajaxPost(url, d) {
+            var oReq = new XMLHttpRequest();
+            oReq.addEventListener("load", ajaxShowResponse);
+            oReq.open("POST", url);
+            oReq.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            oReq.send(d);
+        }
+
+        function doRead() {
+            var en = document.getElementById('en').value;
+            var body = { "button": "Read", "en": "" + en + "" };
+            ajaxPost("/dic_add", JSON.stringify(body));
+        }
+
+        function doAdd() {
+            var en = document.getElementById('en').value;
+            var ru = document.getElementById('ru').value;
+            var cat = document.getElementById('cat').value;
+
+            //alert(last_name);
+            var json =
+                "{"
+                + "\"button\":\"" + "Add" + "\","
+                + "\"en\":\"" + en + "\","
+                + "\"ru\":\"" + ru + "\","
+                + "\"cat\":\"" + cat + "\""
+                + "}";
+            var s = JSON.parse(json);
+            var body = JSON.stringify(s, null, 3);
+            ajaxPost("/dic_add", body);
+        }
+
+    </script>
+
+
+
+</body>
+
+</html>

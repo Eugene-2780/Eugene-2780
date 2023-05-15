@@ -1,0 +1,57 @@
+{
+   "dic": [
+      {
+         "en": "English",
+         "ru": "Русский",
+         "cat": "Other"
+      },
+      {
+         "en": "conducive",
+         "ru": "благоприятный",
+         "cat": "Expression",
+         "sub": ""
+      },
+      {
+         "en": "furious",
+         "ru": "яростный",
+         "cat": "Emotions",
+         "sub": ""
+      },
+      {
+         "en": "susceptible",
+         "ru": "восприимчивый",
+         "cat": "Emotions",
+         "sub": ""
+      },
+      {
+         "en": "stark",
+         "ru": "суровый",
+         "cat": "Emotions",
+         "sub": ""
+      },
+      {
+         "en": "distracted",
+         "ru": "рассеянный",
+         "cat": "Emotions",
+         "sub": ""
+      },
+      {
+         "en": "scatterbrained",
+         "ru": "distracted, thinking about many different things",
+         "cat": "Emotions",
+         "sub": ""
+      },
+      {
+         "en": "burnt out",
+         "ru": "разочарованный в своих силах",
+         "cat": "Emotions",
+         "sub": ""
+      },
+      {
+         "en": "in a rut",
+         "ru": "stuck in the same routine",
+         "cat": "Expression",
+         "sub": ""
+      }
+   ]
+}
