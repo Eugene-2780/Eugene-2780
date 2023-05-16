@@ -20,7 +20,7 @@
       {
          "en": "susceptible",
          "ru": "восприимчивый",
-         "cat": "Emotions",
+         "cat": "Trait",
          "sub": ""
       },
       {
@@ -51,6 +51,42 @@
          "en": "in a rut",
          "ru": "stuck in the same routine",
          "cat": "Expression",
+         "sub": ""
+      },
+      {
+         "en": "slopy",
+         "ru": "небрежный",
+         "cat": "Trait",
+         "sub": ""
+      },
+      {
+         "en": "intrepid",
+         "ru": "бесстрашный",
+         "cat": "Trait",
+         "sub": ""
+      },
+      {
+         "en": "frivolous",
+         "ru": "легкомысленный",
+         "cat": "Trait",
+         "sub": ""
+      },
+      {
+         "en": "tempting",
+         "ru": "соблазнительный",
+         "cat": "Trait",
+         "sub": ""
+      },
+      {
+         "en": "rigorous",
+         "ru": "тщательный",
+         "cat": "Trait",
+         "sub": ""
+      },
+      {
+         "en": "meticulous",
+         "ru": "дотошный",
+         "cat": "Trait",
          "sub": ""
       }
    ]

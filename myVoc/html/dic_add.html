@@ -8,18 +8,8 @@
     <link rel="stylesheet" href="index.css">
 </head>
 
-
-
-<html charset="UTF-8">
-
-<head>
-    <style>
-    </style>
-</head>
-
 <body>
-    <form action="/dic_add" method="POST" target="rsp">
-
+    <p>Add Record</p>
         <table align=center width='100%' border=4>
             <tr>
                 <td><label for="en">English:</label></td>
@@ -46,22 +36,35 @@
             <tr>
                 <td><label for="cat">Category:</label></td>
                 <td>
-                    <input list="Categories" size='55' id="cat" name="cat" value="Human.trait" >
+                    <input list="Categories" size='55' id="cat" name="cat" value="Emotions">
                     <datalist id="Categories">
-                        <option value="Human.emotions">
-                        <option value="Human.trait">
-                        <option value="Home">
+                        <option value="Emotions">
+                        <option value="Expression">
+                        <option value="Business">
+                        <option value="House">
+                        <option value="Money">
+                        <option value="Clothes">
+                        <option value="Shopping">
+                        <option value="Food">
+                        <option value="Driving">
+                        <option value="Transportation">
+                        <option value="Health">
+                        <option value="Work">
+                        <option value="Study">
+                        <option value="Phone">
+                        <option value="Sport">
+                        <option value="Politics">
+                        <option value="Crime">
+                        <option value="Travel">
                         <option value="Weather">
                         <option value="Greeting">
                         <option value="Other">
                     </datalist>
-                    <input type="button" name="button" value="Clear"
-                        onclick="document.getElementById('cat').value = ''" />
+                        <input type="button" name="button" value="Clear" onclick="document.getElementById('cat').value = ''" />
 
                 </td>
             </tr>
         </table>
-    </form>
 
     <!--Responce Table-->
     <table width='100%' height='500' border=1>

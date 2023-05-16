@@ -4,23 +4,12 @@
 
 <head>
     <meta charset="UTF-8" />
-    <title>English Dictionary</title>
+    <title>English Dictionary Edit</title>
     <link rel="stylesheet" href="index.css">
-    <script src="../js/ext.js"></script>
-</head>
-
-
-<html charset="UTF-8">
-
-<head>
-    <style>
-    </style>
 </head>
 
 <body>
     <p>Edit Record</p>
-    <!-- <form action="/dic_edit" method="POST" target="rsp" "> -->
-
     <table align=center width='100%' border=4>
         <tr>
             <td><label for="en">English:</label></td>
@@ -28,9 +17,7 @@
                 <input size='55' type="text" value="" id="en" name="en" autocomplete="off" onchange="" />
                 <input type="button" name="button" value="Clear" onclick="document.getElementById('en').value = ''" />
             </td>
-            <td align='center'> <input style="width:140px;" type="submit" name="button" value="Read"
-                    onclick="doRead()" />
-            </td>
+            <td align='center'> <input style="width:140px;" type="submit" name="button" value="Read" onclick="doRead()" /></td>
         </tr>
         <tr>
             <td><label for="ru">Russian:</label></td>
@@ -38,9 +25,7 @@
                 <input size='55' type="text" value="" id="ru" name="ru" />
                 <input type="button" name="button" value="Clear" onclick="document.getElementById('ru').value = ''" />
             </td>
-            <td align='center'> <input style="width:140px;" type="submit" name="button" value="Edit"
-                    onclick="doEdit()" />
-            </td>
+            <td align='center'> <input style="width:140px;" type="submit" name="button" value="Update" onclick="doEdit()" /> </td>
         </tr>
         <tr>
             <td><label for="cat">Category:</label></td>
@@ -48,6 +33,7 @@
                 <input list="Categories" size='55' id="cat" name="cat" value="Emotions">
                 <datalist id="Categories">
                     <option value="Emotions">
+                    <option value="Trait">
                     <option value="Expression">
                     <option value="Business">
                     <option value="House">
@@ -69,81 +55,43 @@
                     <option value="Greeting">
                     <option value="Other">
                 </datalist>
-                <input type="button" name="button" value="Clear" onclick="document.getElementById('cat').value = ''" />
-
+                <input type="button" name="button" value="Clear" onclick="document.getElementById('cat').value = ''" /></td>
             </td>
+            <td align='center'> <input style="width:140px;" type="submit" name="button" value="Add" onclick="doAdd()" /> </td>
         </tr>
-        <!-- </table> -->
-        </form>
-
+    </table>
         <!--Response Table-->
         <table width='100%' height='500' border=1>
             <tr>
                 <td>
                     <p align='left'>Response:</p>
-                    <iframe title="frame" id=rsp name="rsp" width=100% height='600'
-                        onselect="alert(innerText)"></iframe>
+                    <iframe title="frame" id=rsp name="rsp" width=100% height='600' ></iframe>
                 </td>
             </tr>
         </table>
 
         <script>
-
-            function doEnglish(e) {
-                var target = e.target || e.srcElement;
-                var text = target.textContent || target.innerText;
-                document.getElementById('en').value = text;
-            }
-            function doRussian(e) {
-                var target = e.target || e.srcElement;
-                var text = target.textContent || target.innerText;
-                document.getElementById('ru').value = text;
-            }
-            function doRow(e) {
-                var target = e.target || e.srcElement;
-                // var text = target.textContent || target.innerText;
-                // var cellIndex = target.cellIndex;
-                var tableRow = target.parentElement;
-                tableRow.bgColor = "red";
-                //tableRow.border = 5;
-                var itemEn = tableRow.children.item(1).innerText;
-                var itemRu = tableRow.children.item(2).innerText;
-                var itemCa = tableRow.children.item(3).innerText;
-
-                document.getElementById('en').value = itemEn;
-                document.getElementById('ru').value = itemRu;
-                document.getElementById('cat').value = itemCa;
-            }
-            function doRadio(e) {
-                var target = e.target || e.srcElement;
-                var tableRow = target.parentElement.parentElement;
-                var itemEn = tableRow.children.item(1).innerText;
-                var itemRu = tableRow.children.item(2).innerText;
-                var itemCa = tableRow.children.item(3).innerText;
-
-                document.getElementById('en').value = itemEn;
-                document.getElementById('ru').value = itemRu;
-                document.getElementById('cat').value = itemCa;
-            }
-
             function HTMLBegin() {
                 var html = "<HTML>\n<BODY>\n<TABLE style=\"width:100%\" border=1 >\n";
 
                 var th =
                     "<tr>" +
                     "<th>Index</th>" +
-                    "<th>English</th>" +
-                    "<th>Russian</th>" +
+                    "<th>English <input type='checkbox' value=''> </th>" +
+                    "<th>Russian <input type='checkbox' value=''> </th>" +
                     "<th>Categoty</th>" +
                     "</tr>";
                 html = html.concat(th);
                 return html;
             }
+
             function HTMLAddRow(rec, nIndex) {
                 var row = "<tr  id=\"" + 'ROW' + nIndex + "\" >";
-                // var td = "<td>" + (nIndex) + "</td>";
                 var td = "<td><input type='radio' id='RADIO" + nIndex + "' name='group' value='" + nIndex + "' >" + nIndex + "</td>";
                 row = row.concat(td);
+                // td = "<td id=\"" + 'E' + nIndex + "\" >" + rec.en + "<audio autoplay> <source src='./data/" + rec.en + ".mp3\'" + "type='audio/mpeg' /></audio>" + 
+                //     "<a href='./data/" + rec.en + ".mp3' > DL </a>" + "</td>";
+
                 td = "<td id=\"" + 'E' + nIndex + "\" >" + rec.en + "</td>";
                 row = row.concat(td);
                 td = "<td id=\"" + 'R' + nIndex + "\" >" + rec.ru + "</td>";
@@ -153,6 +101,7 @@
                 row = row.concat("</tr>");
                 return row;
             }
+
             function HTMLEnd() {
                 return ("\n</TABLE>\n</BODY>\n</HTML>");
             }
@@ -171,43 +120,43 @@
                 return html;
             }
 
+            function doRadio(e) {
+                var target = e.target || e.srcElement;
+                var tableRow = target.parentElement.parentElement;
+                var itemEn = tableRow.children.item(1).innerText;
+                var itemRu = tableRow.children.item(2).innerText;
+                var itemCa = tableRow.children.item(3).innerText;
+
+                document.getElementById('en').value = itemEn;
+                document.getElementById('ru').value = itemRu;
+                document.getElementById('cat').value = itemCa;
+            }
+
             function ajaxShowResponse() {
                 var frm = document.getElementById('rsp');
                 var doc = frm.contentDocument;
 
                 let json = JSON.parse(this.responseText);
                 var dic = json.dic;
-                var html = ConvertToHTML(dic);
-                doc.write(html);
+                if(json.Status == "OK"){
+                    var html = ConvertToHTML(dic);
+                    doc.write(html);
+                }
+                else{
+                    var reply = JSON.stringify(json, null, 3);
+                    doc.write(reply);
+                }
+                doc.close();
 
                 for (var i = 1; i < dic.length + 1; i++) {
-                    // var idE = "E" + i;
-                    // var idR = "R" + i;
                     var idRow = "ROW" + i;
                     var idRadio = "RADIO" + i;
-
-                    // const e = doc.getElementById(idE);
-                    // if(e!=null){
-                    //     e.addEventListener("click", doEnglish, false);
-                    // }
-                    // const r = doc.getElementById(idR);
-                    // if(r!=null){
-                    //     r.addEventListener("click", doRussian, false);
-                    // }
-
-                    // const row = doc.getElementById(idRow);
-                    // if(row!=null){
-                    //     row.addEventListener("dblclick", doRow, false);
-                    // }
 
                     const radio = doc.getElementById(idRadio);
                     if (radio != null) {
                         radio.addEventListener("change", doRadio, false);
                     }
-
-
                 }
-                doc.close();
             }
 
             function ajaxPost(url, d) {
@@ -218,21 +167,17 @@
                 oReq.send(d);
             }
 
-
             function readReq(cmd) {
                 var en = document.getElementById('en').value;
                 var ru = document.getElementById('ru').value;
                 var cat = document.getElementById('cat').value;
 
-                var json =
-                    "{"
-                    + "\"button\":\"" + cmd + "\","
-                    + "\"en\":\"" + en + "\","
-                    + "\"ru\":\"" + ru + "\","
-                    + "\"cat\":\"" + cat + "\""
-                    + "}";
-                var s = JSON.parse(json);
-                var body = JSON.stringify(s);
+                var body = { "button": "Read", "en": "","ru":"", "cat":""  };
+                body.button = cmd;
+                body.en = en;
+                body.ru = ru;
+                body.cat = cat;
+                var body = JSON.stringify(body);
                 return body
             }
 
@@ -243,6 +188,10 @@
 
             function doEdit() {
                 var body = readReq("Edit");
+                ajaxPost("/dic_edit", body);
+            }
+            function doAdd() {
+                var body = readReq("Add");
                 ajaxPost("/dic_edit", body);
             }
 

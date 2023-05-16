@@ -1,3 +1,5 @@
+<script type="javascript" >
+
 function HTMLBegin() {
     var html = "<HTML>\n<BODY>\n<TABLE style=\"width:100%\" border=1 >\n";
 
@@ -11,6 +13,7 @@ function HTMLBegin() {
     html = html.concat(th);
     return html;
 }
+
 function HTMLAddRow(rec, nIndex) {
     var row = "<tr  id=\"" + 'ROW' + nIndex + "\" >";
     // var td = "<td>" + (nIndex) + "</td>";
@@ -25,6 +28,7 @@ function HTMLAddRow(rec, nIndex) {
     row = row.concat("</tr>");
     return row;
 }
+
 function HTMLEnd() {
     return ("\n</TABLE>\n</BODY>\n</HTML>");
 }
@@ -42,4 +46,8 @@ function ConvertToHTML(result) {
     html = html.concat(HTMLEnd());
     return html;
 }
+
+</script>
+
+//module.exports.ConvertToHTML = ConvertToHTML;
 

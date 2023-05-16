@@ -10,7 +10,7 @@ var fs = require("fs");
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public'));
-
+app.use(express.static(path.join(__dirname, 'public')));
 
 const { isNullOrUndefined } = require('util');
 
@@ -35,11 +35,13 @@ function findRec(assocs, en) {
 }
 
 function Response(status, note, dic) {
-    var rsp = { "Status": "", "Note": "", "Count": "", "dic": [] };
+    var rsp = { "Status": "", "Note": "", "Count": "0", "dic": [] };
     rsp.Status = status;
     rsp.Note = note;
-    rsp.Count = dic.length;
-    rsp.dic = dic;
+    if(dic != null){
+        rsp.Count = dic.length;
+        rsp.dic = dic;
+    }
     rsp = JSON.stringify(rsp, null, 3);
     return rsp;
 }
@@ -50,7 +52,7 @@ function dicAdd(res, dic, en_, ru_, cat) {
     var ru = ru_;
 
     if (en == null || en == undefined || en.length == 0) {
-        res.end(Response("Error", "English is missing", dic));
+        res.end(Response("Error", "English is missing", null));
         return false;
     }
 
@@ -61,11 +63,11 @@ function dicAdd(res, dic, en_, ru_, cat) {
     if (bComplex) {
         //en_= en_.replace("\t", " ");
         en = en_.substr(0, pos);
-        ru = en_.slice(pos+1, en_.length);
+        ru = en_.slice(pos + 1, en_.length);
     }
     else {
         if (ru == null || ru == undefined || ru.length == 0) {
-            res.end(Response("Error", "Russian is missing", dic));
+            res.end(Response("Error", "Russian is missing", null));
             return false;
         }
     }
@@ -79,7 +81,7 @@ function dicAdd(res, dic, en_, ru_, cat) {
     if (rec != null) {
         rec.ru = ru;
         rec.cat = cat;
-        res.end(Response("Error", "Duplicate Keyword ==> '" + en +"'", rec));
+        res.end(Response("Error", "Duplicate Keyword ==> '" + en + "'", rec));
         return false;
     }
 
@@ -92,57 +94,10 @@ function dicAdd(res, dic, en_, ru_, cat) {
     return true;
 }
 
-function HTMLBegin() {
-    var html = "<HTML>\n<BODY>\n<TABLE style=\"width:100%\" border=1 >\n";
-
-    var th =
-        "<tr>" +
-        "<th>Index</th>" +
-        "<th>English</th>" +
-        "<th>Russian</th>" +
-        "<th>Categoty</th>" +
-        "</tr>";
-    html = html.concat(th);
-    return html;
-}
-
-function HTMLAddRow(rec, nIndex) {
-    var row = "<tr>";
-    var td = "<td>" + (nIndex) + "</td>";
-    row = row.concat(td);
-    // td = "<td onclick=\"c\">" + rec.en + "</td>";
-    td = "<td id=\"TABLEDATA\" >" + rec.en + "</td>";
-    row = row.concat(td);
-    td = "<td>" + rec.ru + "</td>";
-    row = row.concat(td);
-    td = "<td>" + rec.cat + "</td>";
-    row = row.concat(td);
-    row = row.concat("</tr>");
-    return row;
-}
-
-function HTMLEnd() {
-    return ("\n</TABLE>\n</BODY>\n</HTML>");
-}
-
-//Convert to html grid
-function ConvertToHTML(result) {
-    var html = HTMLBegin();
-    var nIndex = 1;
-    for (var j = 0; j < result.length; j++) {
-        var rec = result[j];
-        var row = HTMLAddRow(rec, nIndex);
-        html = html.concat(row);
-        nIndex++;
-    }
-    html = html.concat(HTMLEnd());
-    return html;
-}
 
 app.get('/', function (req, res) {
     res.sendFile(__dirname + "/html/" + "index.html");
 });
-
 app.get('/dic_add', function (req, res) {
     res.sendFile(__dirname + "/html/" + "dic_add.html");
 });
@@ -168,12 +123,12 @@ app.post('/dic_add', (req, res) => {
         console.log(req.body);
 
         if (cmd == "Read") {
-            
+
             var result = [];
             for (var i = 0; i < dic.length; i++) {
                 var rec = dic[i];
-                
-                if(en.length == 0 || rec.en.indexOf(en) == 0) 
+
+                if (en.length == 0 || rec.en.indexOf(en) == 0)
                     result.push(rec);
             }
 
@@ -209,13 +164,13 @@ app.post('/dic_add', (req, res) => {
     });
 });
 
-function Filter(dic,en,ru,cat){
+function Filter(dic, en, ru, cat) {
     var result = [];
     for (var i = 0; i < dic.length; i++) {
         var rec = dic[i];
         let bEn = en.length == 0 || rec.en.indexOf(en) == 0;
         let bCat = cat.length == 0 || rec.cat === cat;
-        if(bEn && bCat) 
+        if (bEn && bCat)
             result.push(rec);
     }
     return result;
@@ -236,48 +191,55 @@ app.post('/dic_edit', (req, res) => {
         var cat = req.body.cat;
 
         console.log(req.body);
-
-        if (cmd == "Read") {
-            
-            var result = Filter(dic,en,ru,cat);
-
-            if (bHtml) {
-                var html = ConvertToHTML(result);
-                res.end(html);
-            }
-            else {
+        switch (cmd) {
+            case "Read": {
+                var result = Filter(dic, en, ru, cat);
                 res.end(Response("OK", "Filtered", result));
+                return;
             }
+                break;
+            case "Edit": {
+                if(en==null || en.length == 0){
+                    res.end(Response("FAIL", "Empty English field", null));
+                    return;
+                }
+                var rec = findRec(dic, en);
+                if (rec == null) {
+                    //Not found
+                    var result = [];
+                    res.end(Response("FAIL", "Not found", result));
+                    return;
+                }
 
-            return;
-        }
-        else if (cmd == "Edit") {
-            var rec = findRec(dic, en);
+                //Already exists
+                if (rec != null) {
+                    rec.ru = ru;
+                    rec.cat = cat;
+                }
 
-            //Already exists
-            if(rec != null){
-                rec.ru = ru;
-                rec.cat = cat;
-            }
-        
-            var bok = true;
-            if (bok) {
                 //Replace current file with new assignment
                 var sdata = JSON.stringify(data, null, 3);
                 fs.writeFileSync(CUR_FILEPATH(), sdata);
 
-                if (bHtml) {
-                    var html = ConvertToHTML(dic);
-                    res.end(html);
-                }
-                else {
-                    res.end(Response("OK", "Edited", dic));
-                }
-
-
+                res.end(Response("OK", "Edited", dic));
             }
+                break;
+            case "Add": {
+                var bok = dicAdd(res, dic, en, ru, cat);
+                if (bok) {
+                    //Replace current file with new assignment
+                    var sdata = JSON.stringify(data, null, 3);
+                    fs.writeFileSync(CUR_FILEPATH(), sdata);
+
+                    res.end(Response("OK", "Added", dic));
+                }
+            }
+                break;
+            default:
+                break;
         }
     });
+
 });
 
 app.listen(port, () => {
