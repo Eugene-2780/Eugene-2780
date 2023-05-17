@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<meta name="viewport" content="width=device-width">
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Marvel</title>
+    <!-- <link rel="stylesheet" href="index.css"> -->
+</head>
+
+<body>
+    <table style="width:100%;" border="1">
+        <th colspan=2>Marvel</th>
+        <tr>
+            <td style="width:80%;">
+                <video controls id="player" src="/Marvel?filename=Marvel2s.mp3" type="audio/mpeg" width="100%"
+                    height="20"></video>
+            </td>
+            <td >
+                <div>
+                    <input type="radio" id="Russian" name="marvel" onclick="doRussian()" />
+                    <label for="Russian">Russian</label>
+                    <input type="radio" checked="checked" id="English" name="marvel" onclick="doEnglish()" />
+                    <label for="English">English</label>
+                </div>
+            </td>
+        </tr>
+    </table>
+
+    <!--PDF view-->
+    <table style="width:100%;" border="1">
+        <tr>
+            <td >
+                <embed src="/Marvel?filename=Marvel2s.pdf" type="application/pdf" width="100%" height="1000" />
+            </td>
+        </tr>
+    </table>
+
+    <script>
+        function doRussian() {
+            var player = document.getElementById('player');
+            player.src = "/Marvel?filename=Marvel-R2s.mp3";
+        }
+        function doEnglish() {
+            var player = document.getElementById('player');
+            player.src = "/Marvel?filename=Marvel2s.mp3";
+        }
+    </script>
+</body>
+
+</html>

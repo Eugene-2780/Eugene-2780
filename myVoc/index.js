@@ -16,6 +16,7 @@ const { isNullOrUndefined } = require('util');
 const MP3_FOLDER = __dirname + "/mp3/";
 const HTML_FOLDER = __dirname + "/html/";
 const DATA_FOLDER = __dirname + "/data/";
+const MARVEL_FOLDER = __dirname + "/Marvel/";
 
 function DIC_FILEPATH(prefix = "") {
     return DATA_FOLDER + prefix + "myDictionary.json";
@@ -110,6 +111,23 @@ app.get('/play', function (req, res) {
     var file = en + ".mp3";
 
     var filePath = MP3_FOLDER + file;
+    if (!fs.existsSync(filePath)) {
+        return res.end(Response("FAIL", "File not found ==> " + file, null));
+    }
+    res.sendFile(filePath);
+})
+
+app.get('/Marvel', function (req, res) {
+    var s = "req.query : " + JSON.stringify(req.query, null, 3) + "\n";
+    console.log("Marvel ==> " + s);
+
+    var filename = req.query.filename;
+    if (filename == null || filename.length == 0) {
+        return res.end(Response("FAIL", "File name field is empty", null));
+    }
+    var file = filename;
+
+    var filePath = MARVEL_FOLDER + filename;
     if (!fs.existsSync(filePath)) {
         return res.end(Response("FAIL", "File not found ==> " + file, null));
     }
