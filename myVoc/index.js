@@ -10,16 +10,15 @@ var fs = require("fs");
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public'));
-app.use(express.static(path.join(__dirname, 'public')));
 
 const { isNullOrUndefined } = require('util');
 
-function CUR_FILEPATH(prefix = "") {
-    return __dirname + "/data/" + prefix + "myDictionary.json";
-}
+const MP3_FOLDER = __dirname + "/mp3/";
+const HTML_FOLDER = __dirname + "/html/";
+const DATA_FOLDER = __dirname + "/data/";
 
-function Clone(src) {
-    return JSON.parse(JSON.stringify(src)); //deep copy
+function DIC_FILEPATH(prefix = "") {
+    return DATA_FOLDER + prefix + "myDictionary.json";
 }
 
 function findRec(assocs, en) {
@@ -38,14 +37,13 @@ function Response(status, note, dic) {
     var rsp = { "Status": "", "Note": "", "Count": "0", "dic": [] };
     rsp.Status = status;
     rsp.Note = note;
-    if(dic != null){
+    if (dic != null) {
         rsp.Count = dic.length;
         rsp.dic = dic;
     }
     rsp = JSON.stringify(rsp, null, 3);
     return rsp;
 }
-
 
 function dicAdd(res, dic, en_, ru_, cat) {
     var en = en_;
@@ -94,74 +92,35 @@ function dicAdd(res, dic, en_, ru_, cat) {
     return true;
 }
 
-
 app.get('/', function (req, res) {
-    res.sendFile(__dirname + "/html/" + "index.html");
-});
-app.get('/dic_add', function (req, res) {
-    res.sendFile(__dirname + "/html/" + "dic_add.html");
+    res.sendFile(HTML_FOLDER + "index.html");
 });
 
-app.get('/dic_edit', function (req, res) {
-    res.sendFile(__dirname + "/html/" + "dic_edit.html");
+/*
+Returns file.mp3 to client
+*/
+app.get('/play', function (req, res) {
+    var s = "req.query : " + JSON.stringify(req.query, null, 3) + "\n";
+    console.log("Play ==> " + s);
+
+    var en = req.query.en;
+    if (en == null || en.length == 0) {
+        return res.end(Response("FAIL", "English field is empty", null));
+    }
+    var file = en + ".mp3";
+
+    var filePath = MP3_FOLDER + file;
+    if (!fs.existsSync(filePath)) {
+        return res.end(Response("FAIL", "File not found ==> " + file, null));
+    }
+    res.sendFile(filePath);
+})
+
+app.get('/vocab', function (req, res) {
+    res.sendFile(HTML_FOLDER + "vocab.html");
 });
-
-app.post('/dic_add', (req, res) => {
-
-    console.log('/dic_add');
-
-    fs.readFile(CUR_FILEPATH(), 'utf8', function (err, ddd) {
-
-        var data = JSON.parse(ddd);
-        var dic = data.dic;
-        var cmd = req.body.button;
-
-        var en = req.body.en;
-        var ru = req.body.ru;
-        var cat = req.body.cat;
-
-        console.log(req.body);
-
-        if (cmd == "Read") {
-
-            var result = [];
-            for (var i = 0; i < dic.length; i++) {
-                var rec = dic[i];
-
-                if (en.length == 0 || rec.en.indexOf(en) == 0)
-                    result.push(rec);
-            }
-
-            if (bHtml) {
-                var html = ConvertToHTML(result);
-                res.end(html);
-            }
-            else {
-                res.end(Response("OK", "Filtered", result));
-            }
-
-            return;
-        }
-        else if (cmd == "Add") {
-
-            var bok = dicAdd(res, dic, en, ru, cat);
-            if (bok) {
-                //Replace current file with new assignment
-                var sdata = JSON.stringify(data, null, 3);
-                fs.writeFileSync(CUR_FILEPATH(), sdata);
-
-                if (bHtml) {
-                    var html = ConvertToHTML(dic);
-                    res.end(html);
-                }
-                else {
-                    res.end(Response("OK", "Added", dic));
-                }
-
-
-            }
-        }
-    });
+app.get('/marvel', function (req, res) {
+    res.sendFile(HTML_FOLDER + "Marvel.html");
 });
 
 function Filter(dic, en, ru, cat) {
@@ -176,11 +135,11 @@ function Filter(dic, en, ru, cat) {
     return result;
 }
 
-app.post('/dic_edit', (req, res) => {
+app.post('/vocab', (req, res) => {
 
-    console.log('/dic_edit');
+    console.log('/vocab');
 
-    fs.readFile(CUR_FILEPATH(), 'utf8', function (err, ddd) {
+    fs.readFile(DIC_FILEPATH(), 'utf8', function (err, ddd) {
 
         var data = JSON.parse(ddd);
         var dic = data.dic;
@@ -199,7 +158,7 @@ app.post('/dic_edit', (req, res) => {
             }
                 break;
             case "Edit": {
-                if(en==null || en.length == 0){
+                if (en == null || en.length == 0) {
                     res.end(Response("FAIL", "Empty English field", null));
                     return;
                 }
@@ -219,7 +178,7 @@ app.post('/dic_edit', (req, res) => {
 
                 //Replace current file with new assignment
                 var sdata = JSON.stringify(data, null, 3);
-                fs.writeFileSync(CUR_FILEPATH(), sdata);
+                fs.writeFileSync(DIC_FILEPATH(), sdata);
 
                 res.end(Response("OK", "Edited", dic));
             }
@@ -229,7 +188,7 @@ app.post('/dic_edit', (req, res) => {
                 if (bok) {
                     //Replace current file with new assignment
                     var sdata = JSON.stringify(data, null, 3);
-                    fs.writeFileSync(CUR_FILEPATH(), sdata);
+                    fs.writeFileSync(DIC_FILEPATH(), sdata);
 
                     res.end(Response("OK", "Added", dic));
                 }
@@ -243,5 +202,5 @@ app.post('/dic_edit', (req, res) => {
 });
 
 app.listen(port, () => {
-    console.log(`My dic is starting on port ${port}`)
+    console.log(`My vocabulary is starting on port ${port}`)
 })

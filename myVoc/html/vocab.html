@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<meta name="viewport" content="width=device-width">
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>English Dictionary</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+
+<body onload="Play('welcome')">
+    <table align=center width='100%' border=4>
+        <th colspan=3 id="cap_">Voc</th>
+        <tr>
+            <td class="audio_box" colspan=3>
+                <video controls="" autoplay="" name="media" id="mediaplayer" src="" type="audio/mpeg" width="100%"
+                    height="20""></video>
+        </td>
+
+        </tr>
+        <tr>
+            <td><label for=" en">English:</label>
+            </td>
+            <td>
+                <input size='55' type="text" value="" id="en" name="en" autocomplete="off" onchange="" />
+                <input type="button" name="button" value="Clear" onclick="document.getElementById('en').value = ''" />
+                <input type='checkbox' id='idEnCheckbox' name="group2" checked >
+                <!-- <input type="submit" name="button" value="Play" onclick="doPlay()" /> -->
+            </td>
+            <td align='center'> <input style="width:140px;" type="submit" name="button" value="Read"
+                    onclick="doRead()" /></td>
+        </tr>
+        <tr>
+            <td><label for="ru">Russian:</label></td>
+            <td>
+                <input size='55' type="text" value="" id="ru" name="ru" />
+                <input type="button" name="button" value="Clear" onclick="document.getElementById('ru').value = ''" />
+                <input type='checkbox' id='idRuCheckbox' name="group2" checked >
+            </td>
+            <td align='center'> <input style="width:140px;" type="submit" name="button" value="Update"
+                    onclick="doEdit()" /> </td>
+        </tr>
+        <tr>
+            <td><label for="cat">Category:</label></td>
+            <td>
+                <input list="Categories" size='55' id="cat" name="cat" value="Emotions">
+                <datalist id="Categories">
+                    <option value="Emotions">
+                    <option value="Trait">
+                    <option value="Expression">
+                    <option value="Business">
+                    <option value="House">
+                    <option value="Money">
+                    <option value="Clothes">
+                    <option value="Shopping">
+                    <option value="Food">
+                    <option value="Driving">
+                    <option value="Transportation">
+                    <option value="Health">
+                    <option value="Work">
+                    <option value="Study">
+                    <option value="Phone">
+                    <option value="Sport">
+                    <option value="Politics">
+                    <option value="Crime">
+                    <option value="Travel">
+                    <option value="Weather">
+                    <option value="Greeting">
+                    <option value="Other">
+                </datalist>
+                <input type="button" name="button" value="Clear" onclick="document.getElementById('cat').value = ''" />
+            </td>
+            </td>
+            <td align='center'> <input style="width:140px;" type="submit" name="button" value="Add" onclick="doAdd()" />
+            </td>
+        </tr>
+    </table>
+    <!--Response Table-->
+    <table width='100%' height='500' border=1>
+        <tr>
+            <td>
+                <p align='left'>Response:</p>
+                <iframe title="frame" id=rsp name="rsp" width=100% height='600'></iframe>
+            </td>
+        </tr>
+    </table>
+
+    <script>
+
+        function HTMLBegin() {
+            var html = "<HTML>\n<BODY>\n<TABLE style=\"width:100%\" border=1 >\n";
+
+            var th =
+                "<tr>" +
+                "<th>Index</th>" +
+                "<th>English </th>" +
+                "<th>Russian </th>" +
+                "<th>Categoty</th>" +
+                "</tr>";
+            html = html.concat(th);
+            return html;
+        }
+
+        function HTMLAddRow(rec, nIndex, bRuVisible,bEnVisible) {
+            var row = "<tr  id=\"" + 'ROW' + nIndex + "\" >";
+            var td = "<td><input type='radio' id='RADIO" + nIndex + "' name='group' value='" + nIndex + "' >" + nIndex + "</td>";
+            row = row.concat(td);
+            if(bEnVisible){
+                td = "<td id=\"" + 'E' + nIndex + "\" >" + rec.en + "</td>";
+            }
+            else {
+                td = "<td id=\"" + 'E' + nIndex + "\" >" + "</td>";
+            }
+            row = row.concat(td);
+            if(bRuVisible){
+                td = "<td id=\"" + 'R' + nIndex + "\" >" + rec.ru + "</td>";
+            }
+            else {
+                td = "<td id=\"" + 'R' + nIndex + "\" >" + "</td>";
+            }
+
+            row = row.concat(td);
+            td = "<td>" + rec.cat + "</td>";
+            row = row.concat(td);
+            row = row.concat("</tr>");
+            return row;
+        }
+
+        function HTMLEnd() {
+            return ("\n</TABLE>\n</BODY>\n</HTML>");
+        }
+
+        //Convert to html grid
+        function ConvertToHTML(result) {
+            var bRuVisible = document.getElementById('idRuCheckbox').checked;
+            var bEnVisible = document.getElementById('idEnCheckbox').checked;
+            var html = HTMLBegin();
+            var nIndex = 1;
+            for (var j = 0; j < result.length; j++) {
+                var rec = result[j];
+                var row = HTMLAddRow(rec, nIndex,bRuVisible,bEnVisible);
+                html = html.concat(row);
+                nIndex++;
+            }
+            html = html.concat(HTMLEnd());
+            return html;
+        }
+
+        function doEnglish(e) {
+            var target = e.target || e.srcElement;
+            var text = target.textContent || target.innerText;
+            Play(text);
+        }
+
+        function doRadio(e) {
+            var target = e.target || e.srcElement;
+            var tableRow = target.parentElement.parentElement;
+            var itemEn = tableRow.children.item(1).innerText;
+            var itemRu = tableRow.children.item(2).innerText;
+            var itemCa = tableRow.children.item(3).innerText;
+
+            document.getElementById('en').value = itemEn;
+            document.getElementById('ru').value = itemRu;
+            document.getElementById('cat').value = itemCa;
+        }
+
+        function ajaxShowResponse() {
+            var frm = document.getElementById('rsp');
+            var doc = frm.contentDocument;
+
+            let json = JSON.parse(this.responseText);
+            var dic = json.dic;
+            if (json.Status == "OK") {
+                var html = ConvertToHTML(dic);
+                doc.write(html);
+            }
+            else {
+                var reply = JSON.stringify(json, null, 3);
+                doc.write(reply);
+            }
+            doc.close();
+
+            for (var i = 1; i < dic.length + 1; i++) {
+                var idEn = "E" + i;
+                var idRow = "ROW" + i;
+                var idRadio = "RADIO" + i;
+
+                const radio = doc.getElementById(idRadio);
+                if (radio != null) {
+                    radio.addEventListener("change", doRadio, false);
+                }
+                const en = doc.getElementById(idEn);
+                if (en != null) {
+                    en.addEventListener("dblclick", doEnglish, false);
+                }
+            }
+        }
+
+        function ajaxPost(url, d) {
+            var oReq = new XMLHttpRequest();
+            oReq.addEventListener("load", ajaxShowResponse);
+            oReq.open("POST", url);
+            oReq.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            oReq.send(d);
+        }
+
+        function readReq(cmd) {
+            var en = document.getElementById('en').value;
+            var ru = document.getElementById('ru').value;
+            var cat = document.getElementById('cat').value;
+
+            var body = { "button": "Read", "en": "", "ru": "", "cat": "" };
+            body.button = cmd;
+            body.en = en;
+            body.ru = ru;
+            body.cat = cat;
+            var body = JSON.stringify(body);
+            return body
+        }
+
+        function doRead() {
+            var body = readReq("Read");
+            ajaxPost("/vocab", body);
+        }
+
+        function doEdit() {
+            var body = readReq("Edit");
+            ajaxPost("/vocab", body);
+        }
+        function doAdd() {
+            var body = readReq("Add");
+            ajaxPost("/vocab", body);
+        }
+
+        function Play(en) {
+            var media = document.getElementById('mediaplayer');
+            media.src = "/play?en=" + en;
+            media.play();
+        }
+
+        function doPlay() {
+            var en = document.getElementById('en').value;
+            Play(en);
+        }
+    </script>
+
+
+
+</body>
+
+</html>
