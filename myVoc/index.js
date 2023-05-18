@@ -17,6 +17,8 @@ const MP3_FOLDER = __dirname + "/mp3/";
 const HTML_FOLDER = __dirname + "/html/";
 const DATA_FOLDER = __dirname + "/data/";
 const MARVEL_FOLDER = __dirname + "/Marvel/";
+const THEMES_FOLDER = __dirname + "/Themes/";
+
 
 function DIC_FILEPATH(prefix = "") {
     return DATA_FOLDER + prefix + "myDictionary.json";
@@ -134,12 +136,153 @@ app.get('/Marvel', function (req, res) {
     res.sendFile(filePath);
 })
 
-app.get('/vocab', function (req, res) {
-    res.sendFile(HTML_FOLDER + "vocab.html");
-});
-app.get('/marvel', function (req, res) {
-    res.sendFile(HTML_FOLDER + "Marvel.html");
-});
+function HTMLBegin() {
+    var html = "<HTML>\n<BODY>\n<TABLE style=\"width:100%\" border=1 >\n";
+
+    var th =
+        "<tr>" +
+        "<th width='10%'>Index</th>" +
+        "<th width='15%'>English  </th>" +
+        "<th>Sentence </th>" +
+        "</tr>";
+    html = html.concat(th);
+    return html;
+}
+
+function HTMLAddRow(rec, nIndex, bRuVisible, bEnVisible) {
+    var row = "<tr  id=\"" + 'ROW' + nIndex + "\" >";
+    var td = "<td>" + nIndex + "</td>";
+    row = row.concat(td);
+    if (bEnVisible) {
+        td = "<td id=\"" + 'E' + nIndex + "\" >" + rec.en + "</td>";
+    }
+    else {
+        td = "<td id=\"" + 'E' + nIndex + "\" >" + "</td>";
+    }
+    row = row.concat(td);
+    if (bRuVisible) {
+        td = "<td id=\"" + 'R' + nIndex + "\" >" + rec.ru + "</td>";
+    }
+    else {
+        td = "<td id=\"" + 'R' + nIndex + "\" >" + "</td>";
+    }
+    row = row.concat(td);
+    row = row.concat("</tr>");
+    return row;
+}
+
+function HTMLEnd() {
+    return ("\n</TABLE>\n</BODY>\n</HTML>");
+}
+
+//Convert to html grid
+function ConvertToHTML(result) {
+    var bRuVisible = true;
+    var bEnVisible = true;
+    var html = HTMLBegin();
+    var nIndex = 1;
+    for (var j = 0; j < result.length; j++) {
+        var rec = result[j];
+        var row = HTMLAddRow(rec, nIndex, bRuVisible, bEnVisible);
+        html = html.concat(row);
+        nIndex++;
+    }
+    html = html.concat(HTMLEnd());
+    return html;
+}
+
+function HandleFiles(dir, dic) {
+    var files = fs.readdirSync(dir);
+
+    files.forEach(file => {
+        var pathname = dir + "/" + file;
+        if (fs.lstatSync(pathname).isDirectory()) {
+        }
+        else {
+            var rec = { "en": "", "ru": "" };
+            var bmp3 = file.indexOf(".mp3") != -1;
+            if (bmp3) {
+                rec.en = file;
+                rec.ru = "";
+                dic.push(rec);
+            }
+        }
+    })
+}
+
+function CollectTopics(dir, dic) {
+    var files = fs.readdirSync(dir);
+
+    files.forEach(file => {
+        var pathname = dir + "/" + file;
+        if (fs.lstatSync(pathname).isDirectory()) {
+            dic.push(file);
+        }
+    })
+}
+
+function LogParams(req, cap) {
+    var s =
+        "req.body  : " + JSON.stringify(req.body, null, 3) + "\n" +
+        "req.query : " + JSON.stringify(req.query, null, 3) + "\n" +
+        "req.params: " + JSON.stringify(req.params, null, 3);
+    console.log("== " + cap + " ==\n" + s);
+}
+
+//function readFiles
+app.get('/Themes', function (req, res) {
+
+    LogParams(req, "Themes");
+
+    var cmd = req.query.cmd;
+
+    switch (cmd) {
+        case "Read_topic":
+            {
+                var topic = req.query.topic;
+
+                if (topic == null || topic.length == 0) {
+                    return res.end(Response("FAIL", "Topic field is empty", null));
+                }
+                var filePath = THEMES_FOLDER + topic;
+                if (!fs.existsSync(filePath)) {
+                    return res.end(Response("FAIL", "Topic not found ==> " + filePath, null));
+                }
+                var dic = [];
+                HandleFiles(filePath, dic);
+                var html = ConvertToHTML(dic);
+            
+                return res.end(Response("HTML", "Files", html));
+            }
+            break;
+            case "Read_all_topics":
+                {
+                    var dic = [];
+                    var filePath = THEMES_FOLDER;
+                    CollectTopics(filePath, dic);
+                    return res.end(Response("TOPICS", "Folders", dic));
+                }
+                break;
+            case "Read_file":
+            {
+                var filename = req.query.filename;
+
+                if (filename == null || filename.length == 0) {
+                    return res.end(Response("FAIL", "File name field is empty", null));
+                }
+                var filePath = THEMES_FOLDER + filename;
+                if (!fs.existsSync(filePath)) {
+                    return res.end(Response("FAIL", "File not found ==> " + filePath, null));
+                }
+                return res.sendFile(filePath);
+            }
+            break;
+        default:
+            break;
+    }
+
+    return res.end(Response("FAIL", "Wrong command ==> " + cmd, null));
+})
 
 function Filter(dic, en, ru, cat) {
     var result = [];

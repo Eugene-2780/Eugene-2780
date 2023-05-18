@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<meta name="viewport" content="width=device-width">
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>English Dictionary</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+
+<body onload="reqTopics()">
+    <table align="center" width='100%' border=1>
+        <tr>
+            <th id="cap_">Themes</th>
+            <td width="5%" align="left">
+                <select id="Topics" name="Topics" title="TTT" onchange="onTopicChange(event)" style="width:400px">
+                </select>
+            </td>
+            <td class="audio_box">
+                <video controls="" autoplay="" name="media" id="mediaplayer" src="" type="audio/mpeg" width="100%"
+                    height="20""></video>
+            </td>
+        </tr>
+    </table>
+
+    <!--Response Table-->
+    <table width='100%' height='500' border=0>
+        <tr>
+            <td>
+                Response:
+                <iframe title="frame" id=rsp name="rsp" width=100% height='600'></iframe>
+            </td>
+        </tr>
+    </table>
+
+    <script>
+
+        function ajaxShowResponse() {
+            var frm = document.getElementById('rsp');
+            var doc = frm.contentDocument;
+
+            let json = JSON.parse(this.responseText);
+            var dic = json.dic;
+
+            if (json.Status == "HTML") {
+                var html = dic;
+                doc.write(html);
+            }
+            else if (json.Status == "TOPICS") {
+                //Populate select options
+                var Topics = document.getElementById("Topics");
+                for (var i = 0; i < dic.length; i++) {
+                    var ob = dic[i];
+                    var newOption = document.createElement('option');
+                    var optionText = document.createTextNode(ob);
+                    newOption.appendChild(optionText);
+                    Topics.appendChild(newOption);
+                }
+                //Request table of 
+                reqTopic(Topics.value);
+            }
+            else {
+                var reply = JSON.stringify(json, null, 3);
+                doc.write(reply);
+            }
+            doc.close();
+
+            if (json.Status == "HTML") {
+                for (var i = 1; i < dic.length + 1; i++) {
+                    var idEn = "E" + i;
+                    const en = doc.getElementById(idEn);
+                    if (en != null) {
+                        en.addEventListener("dblclick", reqFile, false);
+                    }
+                }
+            }
+        }
+
+        function ajaxGet(url, data) {
+            var oReq = new XMLHttpRequest();
+            oReq.addEventListener("load", ajaxShowResponse);
+            oReq.open("GET", url + "?" + data);
+            oReq.send();
+        }
+
+        function reqTopics() {
+            var args = "cmd=Read_all_topics";
+            ajaxGet("/Themes", args);
+        }
+
+        function reqTopic(topic) {
+            var args = "cmd=Read_topic&topic=" + topic;
+            ajaxGet("/Themes", args);
+        }
+
+        function reqFile(e) {
+            Play(e.target.innerText);
+        }
+
+        function Play(filename) {
+            var media = document.getElementById('mediaplayer');
+            var topic = document.getElementById('Topics').value;
+            media.src = "/Themes?cmd=Read_file&filename=" + topic + "/" + filename;
+            media.play();
+        }
+
+        function doPlay() {
+            var en = document.getElementById('en').value;
+            Play(en);
+        }
+
+        function onTopicChange(e) {
+            var text = e.target.value;
+            reqTopic(text);
+        }
+    </script>
+
+
+
+</body>
+
+</html>
