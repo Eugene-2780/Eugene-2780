@@ -94,7 +94,8 @@
         }
 
         function reqFile(e) {
-            Play(e.target.innerText);
+            var file = e.target.innerText + ".mp3";
+            Play(file);
         }
 
         function Play(filename) {

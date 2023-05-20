@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="index.css">
 </head>
 
-<body onload="Play('welcome')">
+<body onload="Init()">
     <table align=center width='100%' border=4>
         <th colspan=3 id="cap_">Voc</th>
         <tr>
@@ -24,7 +24,7 @@
             <td>
                 <input size='55' type="text" value="" id="en" name="en" autocomplete="off" onchange="" />
                 <input type="button" name="button" value="Clear" onclick="document.getElementById('en').value = ''" />
-                <input type='checkbox' id='idEnCheckbox' name="group2" checked >
+                <input type='checkbox' id='idEnCheckbox' name="group2" checked>
                 <!-- <input type="submit" name="button" value="Play" onclick="doPlay()" /> -->
             </td>
             <td align='center'> <input style="width:140px;" type="submit" name="button" value="Read"
@@ -35,7 +35,7 @@
             <td>
                 <input size='55' type="text" value="" id="ru" name="ru" />
                 <input type="button" name="button" value="Clear" onclick="document.getElementById('ru').value = ''" />
-                <input type='checkbox' id='idRuCheckbox' name="group2" checked >
+                <input type='checkbox' id='idRuCheckbox' name="group2" checked>
             </td>
             <td align='center'> <input style="width:140px;" type="submit" name="button" value="Update"
                     onclick="doEdit()" /> </td>
@@ -43,7 +43,7 @@
         <tr>
             <td><label for="cat">Category:</label></td>
             <td>
-                <input list="Categories" size='55' id="cat" name="cat" value="Emotions">
+                <input list="Categories" size='55' id="cat" name="cat" value="Emotions" onchange="onTopicChange(event)" >
                 <datalist id="Categories">
                     <option value="Emotions">
                     <option value="Trait">
@@ -101,18 +101,18 @@
             return html;
         }
 
-        function HTMLAddRow(rec, nIndex, bRuVisible,bEnVisible) {
+        function HTMLAddRow(rec, nIndex, bRuVisible, bEnVisible) {
             var row = "<tr  id=\"" + 'ROW' + nIndex + "\" >";
             var td = "<td><input type='radio' id='RADIO" + nIndex + "' name='group' value='" + nIndex + "' >" + nIndex + "</td>";
             row = row.concat(td);
-            if(bEnVisible){
+            if (bEnVisible) {
                 td = "<td id=\"" + 'E' + nIndex + "\" >" + rec.en + "</td>";
             }
             else {
                 td = "<td id=\"" + 'E' + nIndex + "\" >" + "</td>";
             }
             row = row.concat(td);
-            if(bRuVisible){
+            if (bRuVisible) {
                 td = "<td id=\"" + 'R' + nIndex + "\" >" + rec.ru + "</td>";
             }
             else {
@@ -138,7 +138,7 @@
             var nIndex = 1;
             for (var j = 0; j < result.length; j++) {
                 var rec = result[j];
-                var row = HTMLAddRow(rec, nIndex,bRuVisible,bEnVisible);
+                var row = HTMLAddRow(rec, nIndex, bRuVisible, bEnVisible);
                 html = html.concat(row);
                 nIndex++;
             }
@@ -195,7 +195,13 @@
                 }
             }
         }
+        function Init() {
+            Play('welcome');
+        }
 
+        function onTopicChange(event) {
+            doRead();
+        }
         function ajaxPost(url, d) {
             var oReq = new XMLHttpRequest();
             oReq.addEventListener("load", ajaxShowResponse);
@@ -208,8 +214,7 @@
             var en = document.getElementById('en').value;
             var ru = document.getElementById('ru').value;
             var cat = document.getElementById('cat').value;
-
-            var body = { "button": "Read", "en": "", "ru": "", "cat": "" };
+            var body = { "button": "Read", "en": "", "ru": "", "cat": ""};
             body.button = cmd;
             body.en = en;
             body.ru = ru;

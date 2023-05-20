@@ -98,6 +98,9 @@ function dicAdd(res, dic, en_, ru_, cat) {
 app.get('/', function (req, res) {
     res.sendFile(HTML_FOLDER + "index.html");
 });
+app.get('/vocab', function (req, res) {
+    res.sendFile(HTML_FOLDER + "vocab.html");
+});
 
 /*
 Returns file.mp3 to client
@@ -200,10 +203,20 @@ function HandleFiles(dir, dic) {
         }
         else {
             var rec = { "en": "", "ru": "" };
-            var bmp3 = file.indexOf(".mp3") != -1;
+            //var bmp3 = file.indexOf(".mp3") != -1;
+            var bmp3 = path.extname(file) == ".mp3";
             if (bmp3) {
-                rec.en = file;
-                rec.ru = "";
+                var file_title = file.replace(".mp3", "");
+                rec.en = file_title;
+                rec.ru = ""; //Sentence
+
+                var file_txt = file.replace("mp3", "txt");
+                var file_txt_path = dir + "/" + file_txt;
+                if (fs.existsSync(file_txt_path)) {
+                    var data = fs.readFileSync(file_txt_path);
+                    rec.ru = data;
+                }
+
                 dic.push(rec);
             }
         }
@@ -251,19 +264,19 @@ app.get('/Themes', function (req, res) {
                 var dic = [];
                 HandleFiles(filePath, dic);
                 var html = ConvertToHTML(dic);
-            
+
                 return res.end(Response("HTML", "Files", html));
             }
             break;
-            case "Read_all_topics":
-                {
-                    var dic = [];
-                    var filePath = THEMES_FOLDER;
-                    CollectTopics(filePath, dic);
-                    return res.end(Response("TOPICS", "Folders", dic));
-                }
-                break;
-            case "Read_file":
+        case "Read_all_topics":
+            {
+                var dic = [];
+                var filePath = THEMES_FOLDER;
+                CollectTopics(filePath, dic);
+                return res.end(Response("TOPICS", "Folders", dic));
+            }
+            break;
+        case "Read_file":
             {
                 var filename = req.query.filename;
 

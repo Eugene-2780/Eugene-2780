@@ -94,6 +94,18 @@
          "ru": "грозный",
          "cat": "Trait",
          "sub": ""
+      },
+      {
+         "en": "grievances",
+         "ru": "обиды",
+         "cat": "Emotions",
+         "sub": ""
+      },
+      {
+         "en": "concocted",
+         "ru": "состряпан",
+         "cat": "Other",
+         "sub": ""
       }
    ]
 }
