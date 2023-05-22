@@ -48,10 +48,11 @@ function Response(status, note, dic) {
     return rsp;
 }
 
-function dicAdd(res, dic, en_, ru_, cat) {
-    var en = en_;
-    var ru = ru_;
-
+function dicAdd(res, dic, inRec) {
+    var en = inRec.en;
+    var ru = inRec.ru;
+    var cat = inRec.cat;
+    
     if (en == null || en == undefined || en.length == 0) {
         res.end(Response("Error", "English is missing", null));
         return false;
@@ -59,12 +60,11 @@ function dicAdd(res, dic, en_, ru_, cat) {
 
     //Look for a complex value
     const delimiter = "\t";
-    var pos = en_.indexOf(delimiter);
+    var pos = inRec.en.indexOf(delimiter);
     var bComplex = pos != -1;
     if (bComplex) {
-        //en_= en_.replace("\t", " ");
-        en = en_.substr(0, pos);
-        ru = en_.slice(pos + 1, en_.length);
+        en = inRec.en.substr(0, pos);
+        ru = inRec.en.slice(pos + 1, inRec.en.length);
     }
     else {
         if (ru == null || ru == undefined || ru.length == 0) {
@@ -75,7 +75,8 @@ function dicAdd(res, dic, en_, ru_, cat) {
 
     en.trim();
     ru.trim();
-
+    inRec.en = en; 
+    inRec.ru = ru;
     var rec = findRec(dic, en);
 
     //Already exists
@@ -358,13 +359,18 @@ app.post('/vocab', (req, res) => {
             }
                 break;
             case "Add": {
-                var bok = dicAdd(res, dic, en, ru, cat);
+                var o = { "en": "", "ru": "", "cat": "", "sub": "" };
+                o.en = en;
+                o.ru = ru;
+                o.cat = cat;
+                var bok = dicAdd(res, dic, o);
                 if (bok) {
-                    //Replace current file with new assignment
+                    //Save in file
                     var sdata = JSON.stringify(data, null, 3);
                     fs.writeFileSync(DIC_FILEPATH(), sdata);
 
-                    res.end(Response("OK", "Added", dic));
+                    var result = Filter(dic, "", "", o.cat);
+                    res.end(Response("OK", "Added", result));
                 }
             }
                 break;

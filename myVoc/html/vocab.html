@@ -21,34 +21,34 @@
         <tr>
             <td><label for=" en">English:</label>
             </td>
-            <td>
-                <input size='55' type="text" value="" id="en" name="en" autocomplete="off" onchange="" />
-                <input type="button" name="button" value="Clear" onclick="document.getElementById('en').value = ''" />
-                <input type='checkbox' id='idEnCheckbox' name="group2" checked>
-                <!-- <input type="submit" name="button" value="Play" onclick="doPlay()" /> -->
+            <td style="width:400px" >
+                <input style="width:300px" type="text" value="" id="en" name="en" autocomplete="off" onchange="" />
+                <input type="button" name="button" value="Clear" onclick="{document.getElementById('en').value = '' }" />
+                <input type='checkbox' id='idEnCheckbox' name="group2" checked  onchange="onEnCbChange(event)" >
             </td>
             <td align='center'> <input style="width:140px;" type="submit" name="button" value="Read"
-                    onclick="doRead()" /></td>
+                    onclick="doRead()" />
+            </td>
         </tr>
         <tr>
             <td><label for="ru">Russian:</label></td>
-            <td>
-                <input size='55' type="text" value="" id="ru" name="ru" />
+            <td style="width:400px" >
+                <input style="width:300px" type="text" value="" id="ru" name="ru" />
                 <input type="button" name="button" value="Clear" onclick="document.getElementById('ru').value = ''" />
-                <input type='checkbox' id='idRuCheckbox' name="group2" checked>
+                <input type='checkbox' id='idRuCheckbox' name="group2" checked onchange="onRuCbChange(event)" >
             </td>
             <td align='center'> <input style="width:140px;" type="submit" name="button" value="Update"
-                    onclick="doEdit()" /> </td>
+                    onclick="doEdit()" /> 
+            </td>
         </tr>
         <tr>
             <td><label for="cat">Category:</label></td>
-            <td>
-                <input list="Categories" size='55' id="cat" name="cat" value="Emotions" onchange="onTopicChange(event)" >
-                <datalist id="Categories">
-                    <option value="Emotions">
-                    <option value="Trait">
-                    <option value="Expression">
-                    <option value="Business">
+            <td style="width:400px" >
+                <select  style="width:308px" id="cat" name="cat" title="GGG" value="Emotions" onchange="onTopicChange(event)" >
+                    <option value="Emotions">Emotions</option>
+                    <option value="Trait">Trait</option>
+                    <option value="Expression">Expression</option>
+                    <!-- <option value="Business">
                     <option value="House">
                     <option value="Money">
                     <option value="Clothes">
@@ -65,11 +65,11 @@
                     <option value="Crime">
                     <option value="Travel">
                     <option value="Weather">
-                    <option value="Greeting">
-                    <option value="Other">
-                </datalist>
+                    <option value="Greeting"> -->
+                    <option value="Other">Other</option>
+                    <option value="">All</option>
+                </select>
                 <input type="button" name="button" value="Clear" onclick="document.getElementById('cat').value = ''" />
-            </td>
             </td>
             <td align='center'> <input style="width:140px;" type="submit" name="button" value="Add" onclick="doAdd()" />
             </td>
@@ -103,20 +103,20 @@
 
         function HTMLAddRow(rec, nIndex, bRuVisible, bEnVisible) {
             var row = "<tr  id=\"" + 'ROW' + nIndex + "\" >";
-            var td = "<td><input type='radio' id='RADIO" + nIndex + "' name='group' value='" + nIndex + "' >" + nIndex + "</td>";
+            var td = "<td width='5%'><input type='radio' id='RADIO" + nIndex + "' name='group' value='" + nIndex + "' >" + nIndex + "</td>";
             row = row.concat(td);
             if (bEnVisible) {
-                td = "<td id=\"" + 'E' + nIndex + "\" >" + rec.en + "</td>";
+                td = "<td width='30%' id=\"" + 'E' + nIndex + "\" >" + rec.en + "</td>";
             }
             else {
-                td = "<td id=\"" + 'E' + nIndex + "\" >" + "</td>";
+                td = "<td width='30%' id=\"" + 'E' + nIndex + "\" >" + "</td>";
             }
             row = row.concat(td);
             if (bRuVisible) {
-                td = "<td id=\"" + 'R' + nIndex + "\" >" + rec.ru + "</td>";
+                td = "<td width='50%'  id=\"" + 'R' + nIndex + "\" >" + rec.ru + "</td>";
             }
             else {
-                td = "<td id=\"" + 'R' + nIndex + "\" >" + "</td>";
+                td = "<td width='50%'  id=\"" + 'R' + nIndex + "\" >" + "</td>";
             }
 
             row = row.concat(td);
@@ -195,13 +195,21 @@
                 }
             }
         }
+        
         function Init() {
-            Play('welcome');
+           // Play('welcome');
         }
 
         function onTopicChange(event) {
             doRead();
         }
+        function onRuCbChange(event){
+            doRead();
+        }
+        function onEnCbChange(event){
+            doRead();
+        }
+
         function ajaxPost(url, d) {
             var oReq = new XMLHttpRequest();
             oReq.addEventListener("load", ajaxShowResponse);
@@ -221,6 +229,11 @@
             body.cat = cat;
             var body = JSON.stringify(body);
             return body
+        }
+
+        function onTopicChange(e) {
+            var body = readReq("Read");
+            ajaxPost("/vocab", body);
         }
 
         function doRead() {

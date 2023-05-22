@@ -106,6 +106,108 @@
          "ru": "состряпан",
          "cat": "Other",
          "sub": ""
+      },
+      {
+         "en": "brash",
+         "ru": "дерзкий",
+         "cat": "Trait",
+         "sub": ""
+      },
+      {
+         "en": "indifferent",
+         "ru": "безразличный",
+         "cat": "Trait",
+         "sub": ""
+      },
+      {
+         "en": "reckless",
+         "ru": "безрассудный",
+         "cat": "Trait",
+         "sub": ""
+      },
+      {
+         "en": "vigilant",
+         "ru": "бдительный",
+         "cat": "Trait",
+         "sub": ""
+      },
+      {
+         "en": "obsessed",
+         "ru": "одержимый",
+         "cat": "Trait",
+         "sub": ""
+      },
+      {
+         "en": "candor",
+         "ru": "откровенность",
+         "cat": "Trait",
+         "sub": ""
+      },
+      {
+         "en": "lenient",
+         "ru": "снисходительный",
+         "cat": "Trait",
+         "sub": ""
+      },
+      {
+         "en": "lavish",
+         "ru": "щедрый",
+         "cat": "Trait",
+         "sub": ""
+      },
+      {
+         "en": "conscientious",
+         "ru": "добросовестный",
+         "cat": "Trait",
+         "sub": ""
+      },
+      {
+         "en": "constricted",
+         "ru": "ограниченный",
+         "cat": "Trait",
+         "sub": ""
+      },
+      {
+         "en": "authentic",
+         "ru": "подлинный",
+         "cat": "Trait",
+         "sub": ""
+      },
+      {
+         "en": "outspoken",
+         "ru": "откровенный",
+         "cat": "Trait",
+         "sub": ""
+      },
+      {
+         "en": "venerable ",
+         "ru": "почтенный",
+         "cat": "Trait",
+         "sub": ""
+      },
+      {
+         "en": "pathetic",
+         "ru": "жалкий",
+         "cat": "Trait",
+         "sub": ""
+      },
+      {
+         "en": "apprehensive",
+         "ru": "опасающийся",
+         "cat": "Trait",
+         "sub": ""
+      },
+      {
+         "en": "responsible",
+         "ru": "ответственный",
+         "cat": "Trait",
+         "sub": ""
+      },
+      {
+         "en": "empathetic",
+         "ru": "чуткий",
+         "cat": "Trait",
+         "sub": ""
       }
    ]
 }
