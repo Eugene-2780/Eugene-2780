@@ -18,6 +18,7 @@ const HTML_FOLDER = __dirname + "/html/";
 const DATA_FOLDER = __dirname + "/data/";
 const MARVEL_FOLDER = __dirname + "/Marvel/";
 const THEMES_FOLDER = __dirname + "/Themes/";
+const SUBJECTS_FOLDER = __dirname + "/Subjects/";
 
 
 function DIC_FILEPATH(prefix = "") {
@@ -52,7 +53,7 @@ function dicAdd(res, dic, inRec) {
     var en = inRec.en;
     var ru = inRec.ru;
     var cat = inRec.cat;
-    
+
     if (en == null || en == undefined || en.length == 0) {
         res.end(Response("Error", "English is missing", null));
         return false;
@@ -75,7 +76,7 @@ function dicAdd(res, dic, inRec) {
 
     en.trim();
     ru.trim();
-    inRec.en = en; 
+    inRec.en = en;
     inRec.ru = ru;
     var rec = findRec(dic, en);
 
@@ -380,6 +381,98 @@ app.post('/vocab', (req, res) => {
     });
 
 });
+
+function ConvertJSON(text, bRuVisible, bEnVisible) {
+    let str = text;
+    var dic = [];
+    var nIndexStart = 0;
+    var nIndexEnd = -1;
+
+    while ((nIndexEnd = text.indexOf("\r\n", nIndexStart)) >= 0) {
+        var o = { "en": "", "ru": "", "cat": "" };
+
+        nStart = nIndexStart;
+        let nEnd = str.indexOf("\t", nStart);
+        let en_ = str.slice(nStart, nEnd);
+        let en = en_.toString();
+        if (bEnVisible){
+            o.en = en;
+        }
+
+        nStart = nEnd + 1; nEnd = nIndexEnd;
+        let ru_ = text.slice(nStart, nEnd);
+        let ru = ru_.toString();
+        if (bRuVisible){
+            o.ru = ru;
+        }
+        else {
+            o.ru = "";
+        }
+
+        dic.push(o);
+
+        nIndexStart = nIndexEnd + 2;
+    }
+    return dic;
+}
+
+app.get('/Subjects', function (req, res) {
+
+    LogParams(req, "Subjects");
+
+    var cmd = req.query.cmd;
+
+    switch (cmd) {
+        case "Read_file":
+            {
+                var filename = req.query.filename;
+
+                if (filename == null || filename.length == 0) {
+                    return res.end(Response("FAIL", "File name field is empty", null));
+                }
+                var filePath = SUBJECTS_FOLDER + filename;
+                if (!fs.existsSync(filePath)) {
+                    return res.end(Response("FAIL", "File not found ==> " + filePath, null));
+                }
+                return res.sendFile(filePath);
+            }
+            break;
+        case "Read_all_topics": // Browse all folders
+            {
+                var dic = [];
+                var filePath = SUBJECTS_FOLDER;
+                CollectTopics(filePath, dic);
+                return res.end(Response("SUBJECTS", "Folders", dic));
+            }
+            break;
+        case "Read_topic":
+            {
+                var topic = req.query.topic;
+
+                if (topic == null || topic.length == 0) {
+                    return res.end(Response("FAIL", "Topic field is empty", null));
+                }
+                var filePath = SUBJECTS_FOLDER + topic + "/" + topic + ".txt";
+                if (!fs.existsSync(filePath)) {
+                    return res.end(Response("FAIL", "Topic not found ==> " + filePath, null));
+                }
+                var data = fs.readFileSync(filePath);
+
+                const bRuVisible = (req.query.bRuVisible == "true");
+                const bEnVisible = (req.query.bEnVisible == "true");
+
+                var dic = ConvertJSON(data, bRuVisible, bEnVisible);
+                var html = ConvertToHTML(dic);
+
+                return res.end(Response("HTML", "Files", html));
+            }
+            break;
+        default:
+            break;
+    }
+
+    return res.end(Response("FAIL", "Wrong command ==> " + cmd, null));
+})
 
 app.listen(port, () => {
     console.log(`My vocabulary is starting on port ${port}`)
