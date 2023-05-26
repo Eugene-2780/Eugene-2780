@@ -30,11 +30,11 @@
     </table>
 
     <!--Response Table-->
-    <table width='100%' height='500' border=0>
+    <table width='100%' height='100%' border=0>
         <tr>
-            <td>
+            <td width=100% height='100%'>
                 Response:
-                <iframe title="frame" id=rsp name="rsp" width=100% height='600'></iframe>
+                <iframe title="frame" id=rsp name="rsp" style="width:100%; height:800px;" ></iframe>
             </td>
         </tr>
     </table>
@@ -76,7 +76,8 @@
                     var idEn = "E" + i;
                     const en = doc.getElementById(idEn);
                     if (en != null) {
-                        en.addEventListener("dblclick", reqFile, false);
+                        en.addEventListener("dblclick", reqMP3File, false);
+                        en.addEventListener("mousewheel", reqMP3SentenceFile, false);
                     }
                 }
             }
@@ -105,15 +106,20 @@
             ajaxGet("/Subjects", args);
         }
 
-        function reqFile(e) {
+        function reqMP3File(e) {
             var file = e.target.innerText + ".mp3";
             Play(file);
         }
-
+        
+        function reqMP3SentenceFile(e){
+            var file = e.target.innerText + "--.mp3";
+            Play(file);
+        }
+        
         function Play(filename) {
             var media = document.getElementById('mediaplayer');
             var topic = document.getElementById('Topics').value;
-            media.src = "/Subjects?cmd=Read_file&filename=" + topic + "/" + filename;
+            media.src = "/Subjects?cmd=Read_mp3_file&filename=" + filename;
             media.play();
         }
 

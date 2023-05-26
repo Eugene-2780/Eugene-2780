@@ -11,6 +11,6 @@ punch	ударить кулаком
 squat	приседать
 crouch	присесть
 stomp	топать
-stumble, trip	спотыкаться
+stumble	спотыкаться
 slip	соскальзывать
 stub your toe	ударься пальцем ноги

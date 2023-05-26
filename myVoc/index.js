@@ -437,7 +437,21 @@ app.get('/Subjects', function (req, res) {
                 return res.sendFile(filePath);
             }
             break;
-        case "Read_all_topics": // Browse all folders
+            case "Read_mp3_file":
+                {
+                    var filename = req.query.filename;
+    
+                    if (filename == null || filename.length == 0) {
+                        return res.end(Response("FAIL", "File name field is empty", null));
+                    }
+                    var filePath = MP3_FOLDER + filename;
+                    if (!fs.existsSync(filePath)) {
+                        return res.end(Response("FAIL", "File not found ==> " + filePath, null));
+                    }
+                    return res.sendFile(filePath);
+                }
+                break;
+            case "Read_all_topics": // Browse all folders
             {
                 var dic = [];
                 var filePath = SUBJECTS_FOLDER;
