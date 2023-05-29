@@ -4,7 +4,7 @@ stammer	заикаться
 stings	жалит
 huge blow	огромный удар
 textbook example	пример из учебника
-deep down,	в глубине души
+deep down	в глубине души
 pursue	преследовать
 a leap of faith	a risk
 crushed	раздавленный
