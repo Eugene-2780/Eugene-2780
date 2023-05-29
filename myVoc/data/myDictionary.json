@@ -208,6 +208,120 @@
          "ru": "чуткий",
          "cat": "Trait",
          "sub": ""
+      },
+      {
+         "en": "prolific",
+         "ru": "плодовитый",
+         "cat": "Trait",
+         "sub": ""
+      },
+      {
+         "en": "foes",
+         "ru": "враги",
+         "cat": "Other",
+         "sub": ""
+      },
+      {
+         "en": "myriad",
+         "ru": "несчетное число",
+         "cat": "Other",
+         "sub": ""
+      },
+      {
+         "en": "ergo",
+         "ru": "следовательно",
+         "cat": "Other",
+         "sub": ""
+      },
+      {
+         "en": "endure",
+         "ru": "терпеть",
+         "cat": "Other",
+         "sub": ""
+      },
+      {
+         "en": "prop up",
+         "ru": "подпирать",
+         "cat": "Other",
+         "sub": ""
+      },
+      {
+         "en": "inept",
+         "ru": "неумелый",
+         "cat": "Trait",
+         "sub": ""
+      },
+      {
+         "en": "oppressor",
+         "ru": "угнетатель",
+         "cat": "Other",
+         "sub": ""
+      },
+      {
+         "en": "underdog",
+         "ru": "аутсайдер",
+         "cat": "Other",
+         "sub": ""
+      },
+      {
+         "en": "unconscionable",
+         "ru": "бессовестный",
+         "cat": "Other",
+         "sub": ""
+      },
+      {
+         "en": "iffy",
+         "ru": "сомнительный",
+         "cat": "Other",
+         "sub": ""
+      },
+      {
+         "en": "perseverance",
+         "ru": "упорство",
+         "cat": "Other",
+         "sub": ""
+      },
+      {
+         "en": "eminent",
+         "ru": "выдающийся",
+         "cat": "Trait",
+         "sub": ""
+      },
+      {
+         "en": "pounded",
+         "ru": "толченый",
+         "cat": "Other",
+         "sub": ""
+      },
+      {
+         "en": "masterpieces",
+         "ru": "шедевры",
+         "cat": "Other",
+         "sub": ""
+      },
+      {
+         "en": "diminish",
+         "ru": "уменьшить",
+         "cat": "Other",
+         "sub": ""
+      },
+      {
+         "en": "grasp",
+         "ru": "понять, схватывать",
+         "cat": "Other",
+         "sub": ""
+      },
+      {
+         "en": "downside",
+         "ru": "обратная сторона, недостаток",
+         "cat": "Other",
+         "sub": ""
+      },
+      {
+         "en": "fascinating",
+         "ru": "очаровательный",
+         "cat": "Trait",
+         "sub": ""
       }
    ]
 }
