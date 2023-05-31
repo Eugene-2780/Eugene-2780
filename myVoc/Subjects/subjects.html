@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8" >
+    <meta charset="UTF-8">
     <title>English Dictionary</title>
     <link rel="stylesheet" href="index.css">
 </head>
@@ -11,20 +11,26 @@
 <body onload="reqTopics()">
     <table align="center" width='100%' border=2>
         <tr>
-            <th width="50px"  id="cap_">Subjects:</th>
+            <th width="50px" id="cap_">Subjects:</th>
             <td width="30%" align="left">
                 <select id="Topics" name="Topics" title="TTT" onchange="onTopicChange(event)" style="width:100%">
                 </select>
             </td>
-            <td style="width:20%"  >
+            <td style="width:20%">
                 <video controls="" autoplay="" name="media" id="mediaplayer" src="" type="audio/mpeg" width="100%"
                     height="20""></video>
             </td>
-            <td style="width:10%" >
-                <input type='checkbox' id='idEnCheckbox' name="group2" checked  onchange="onCbChange(event)" > English</input>
+            <td style=" width:10%">
+                    <input type='checkbox' id='idEnCheckbox' name="group2" checked onchange="onCbChange(event)">
+                    English</input>
             </td>0
-            <td  style="width:10%" >
-                <input type='checkbox' id='idRuCheckbox' name="group2" checked onchange="onCbChange(event)" >Russian</input>
+            <td style="width:10%">
+                <input type='checkbox' id='idRuCheckbox' name="group2" checked
+                    onchange="onCbChange(event)">Russian</input>
+            </td>
+            <td style="width:10%"> 
+                <input style="width:100%;" type="submit" name="button" value="Play All" onclick="onButtonPlayLoop()" />
+                <input style="width:100%;" type="submit" name="button" value="Stop All" onclick="onButtonStopLoop()" />
             </td>
         </tr>
     </table>
@@ -34,13 +40,13 @@
         <tr>
             <td width=100% height='100%'>
                 Response:
-                <iframe title="frame" id=rsp name="rsp" style="width:100%; height:800px;" ></iframe>
+                <iframe title="frame" id=rsp name="rsp" style="width:100%; height:800px;"></iframe>
             </td>
         </tr>
     </table>
 
     <script>
-
+        var rowCount = 0;
         function ajaxShowResponse() {
             var frm = document.getElementById('rsp');
             var doc = frm.contentDocument;
@@ -49,6 +55,7 @@
             var dic = json.dic;
 
             if (json.Status == "HTML") {
+                rowCount = json.Count;
                 var html = dic;
                 doc.write(html);
             }
@@ -76,8 +83,8 @@
                     var idEn = "E" + i;
                     const en = doc.getElementById(idEn);
                     if (en != null) {
-                        en.addEventListener("dblclick", reqMP3File, false);
-                        en.addEventListener("mousewheel", reqMP3SentenceFile, false);
+                        en.addEventListener("click", reqMP3File, false);
+                        en.addEventListener("dblclick", reqMP3SentenceFile, false);
                     }
                 }
             }
@@ -93,7 +100,7 @@
             oReq.addEventListener("load", ajaxShowResponse);
             oReq.open("GET", url + "?" + data_filter);
             oReq.send();
-        
+
         }
 
         function reqTopics() {
@@ -110,12 +117,35 @@
             var file = e.target.innerText + ".mp3";
             Play(file);
         }
-        
-        function reqMP3SentenceFile(e){
+
+        function reqMP3SentenceFile(e) {
             var file = e.target.innerText + "--.mp3";
             Play(file);
         }
-        
+
+        function delay(time) {
+            return new Promise(resolve => setTimeout(resolve, time));
+        }
+
+        var loop = true;
+        async function onButtonPlayLoop() {
+            loop = true;
+            for (let i = 0; i < rowCount && loop; i++) {
+                PlayByIndex(i);
+                await delay(2000);
+            }
+        }
+        function onButtonStopLoop(){
+            loop = false;
+            Play("welcome.mp3");
+        }
+        function PlayByIndex(index) {
+            var media = document.getElementById('mediaplayer');
+            var topic = document.getElementById('Topics').value;
+            media.src = "/Subjects?cmd=Read_mp3_by_index&topic=" + topic + "&index=" + index;
+            media.play();
+        }
+
         function Play(filename) {
             var media = document.getElementById('mediaplayer');
             var topic = document.getElementById('Topics').value;
@@ -133,7 +163,7 @@
             reqTopic(text);
         }
 
-        function onCbChange(e){
+        function onCbChange(e) {
             var text = e.target.checked;
             var topic = document.getElementById('Topics').value;
             reqTopic(topic)

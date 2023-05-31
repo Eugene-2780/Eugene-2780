@@ -42,7 +42,12 @@ function Response(status, note, dic) {
     rsp.Status = status;
     rsp.Note = note;
     if (dic != null) {
-        rsp.Count = dic.length;
+        if(rsp.Status == "HTML"){
+            rsp.Count = note;
+        }
+        else {
+            rsp.Count = dic.length;
+        }
         rsp.dic = dic;
     }
     rsp = JSON.stringify(rsp, null, 3);
@@ -244,6 +249,7 @@ function LogParams(req, cap) {
 //function readFiles
 app.get('/Themes', function (req, res) {
 
+
     LogParams(req, "Themes");
 
     var cmd = req.query.cmd;
@@ -430,6 +436,28 @@ app.get('/Subjects', function (req, res) {
                 return res.sendFile(filePath);
             }
             break;
+        case "Read_mp3_by_index":
+            {
+                var json = { "dic": [] };
+                const index = req.query.index;
+                const topic = req.query.topic;
+
+                if (index == null || index < 0) {
+                    return res.end(Response("FAIL", "Index is wrong", null));
+                }
+                var filePathJson = SUBJECTS_FOLDER + topic + "/" + topic + ".json";
+
+                if (!fs.existsSync(filePathJson)) {
+                    return res.end(Response("FAIL", "File not found ==> " + filePathJson, null));
+                }
+
+                json = fs.readFileSync(filePathJson);
+                json = JSON.parse(json);
+                var filename = json.dic[index].en + ".mp3";
+                var filePath = MP3_FOLDER + filename;
+                return res.sendFile(filePath);
+            }
+            break;
         case "Read_mp3_file":
             {
                 var filename = req.query.filename;
@@ -482,7 +510,7 @@ app.get('/Subjects', function (req, res) {
                 }
 
                 var html = ConvertToHTML(json.dic, bRuVisible, bEnVisible);
-                return res.end(Response("HTML", "Files", html));
+                return res.end(Response("HTML", json.dic.length, html));
             }
             break;
         default:
