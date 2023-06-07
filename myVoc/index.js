@@ -20,9 +20,17 @@ const MARVEL_FOLDER = __dirname + "/Marvel/";
 const THEMES_FOLDER = __dirname + "/Themes/";
 const SUBJECTS_FOLDER = __dirname + "/Subjects/";
 
+const _STATUS_WORD = "word";
+const _STATUS_NOTE = "note";
+const _STATE_HIDDEN = "hidden";
+const _STATE_VISIBLE = "";
+const _FILE_CONFIG = "config.json";
 
 function DIC_FILEPATH(prefix = "") {
     return DATA_FOLDER + prefix + "myDictionary.json";
+}
+function CONFIG_FILEPATH() {
+    return DATA_FOLDER + _FILE_CONFIG;
 }
 
 function findRec(assocs, en) {
@@ -42,7 +50,7 @@ function Response(status, note, dic) {
     rsp.Status = status;
     rsp.Note = note;
     if (dic != null) {
-        if(rsp.Status == "HTML"){
+        if (rsp.Status == "HTML") {
             rsp.Count = note;
         }
         else {
@@ -153,18 +161,32 @@ function HTMLBegin() {
         "<tr>" +
         "<th width='10%'>Index</th>" +
         "<th width='15%'>English  </th>" +
-        "<th>Sentence </th>" +
+        "<th>Russian</th>" +
+        "<th>Status</th>" +
         "</tr>";
     html = html.concat(th);
     return html;
 }
 
 function HTMLAddRow(rec, nIndex, bRuVisible, bEnVisible) {
+
+    var style = "";
+    var nIndexWord = rec.status.indexOf(_STATUS_WORD);
+    var nIndexNote = rec.status.indexOf(_STATUS_NOTE);
+    var bHidden = rec.state == _STATE_HIDDEN;
+
+    if (nIndexWord >= 0) {
+        style += "color:Blue;"
+    }
+    if (nIndexNote >= 0) {
+        style += "background-color:Ivory;"
+    }
+
     var row = "<tr  id=\"" + 'ROW' + nIndex + "\" >";
     var td = "<td>" + nIndex + "</td>";
     row = row.concat(td);
     if (bEnVisible) {
-        td = "<td id=\"" + 'E' + nIndex + "\" >" + rec.en + "</td>";
+        td = "<td id=\"" + 'E' + nIndex + "\" style=\"" + style + "\">" + rec.en + "</td>";
     }
     else {
         td = "<td id=\"" + 'E' + nIndex + "\" >" + "</td>";
@@ -177,6 +199,17 @@ function HTMLAddRow(rec, nIndex, bRuVisible, bEnVisible) {
         td = "<td id=\"" + 'R' + nIndex + "\" >" + "</td>";
     }
     row = row.concat(td);
+
+    td = "<td id=\"" + 'S' + nIndex + "\" >" + //rec.state +
+        "<input type='checkbox' id='idHide" + nIndex + "' name='n' ";
+    if (bHidden) {
+        td += " checked   ";
+    }
+    td += " ></input>";
+
+    "</td>";
+    row = row.concat(td);
+
     row = row.concat("</tr>");
     return row;
 }
@@ -186,14 +219,17 @@ function HTMLEnd() {
 }
 
 //Convert to html grid
-function ConvertToHTML(result, bRuVisible, bEnVisible) {
+function ConvertToHTML(result, bRuVisible, bEnVisible, bHidVisible) {
     var html = HTMLBegin();
     var nIndex = 1;
     for (var j = 0; j < result.length; j++) {
         var rec = result[j];
-        var row = HTMLAddRow(rec, nIndex, bRuVisible, bEnVisible);
-        html = html.concat(row);
-        nIndex++;
+
+        if (bHidVisible || rec.state != _STATE_HIDDEN) {
+            var row = HTMLAddRow(rec, nIndex, bRuVisible, bEnVisible);
+            html = html.concat(row);
+            nIndex++;
+        }
     }
     html = html.concat(HTMLEnd());
     return html;
@@ -226,7 +262,7 @@ function HandleFiles(dir, dic) {
         }
     })
 }
-
+//Folder means topic
 function CollectTopics(dir, dic) {
     var files = fs.readdirSync(dir);
 
@@ -271,7 +307,7 @@ app.get('/Themes', function (req, res) {
                 const bRuVisible = true;
                 const bEnVisible = true;
 
-                var html = ConvertToHTML(dic, bRuVisible, bEnVisible);
+                var html = ConvertToHTML(dic, bRuVisible, bEnVisible, true);
 
                 return res.end(Response("HTML", "Files", html));
             }
@@ -388,6 +424,7 @@ app.post('/vocab', (req, res) => {
 
 });
 
+//parse the string lines and convert to json
 function ConvertJSON(text) {
     let str = text;
     var dic = [];
@@ -395,7 +432,7 @@ function ConvertJSON(text) {
     var nIndexEnd = -1;
 
     while ((nIndexEnd = text.indexOf("\r\n", nIndexStart)) >= 0) {
-        var o = { "en": "", "ru": "", "cat": "" };
+        var o = { "en": "", "ru": "", "cat": "", "status": "", "state": "" };
 
         nStart = nIndexStart;
         let nEnd = str.indexOf("\t", nStart);
@@ -413,6 +450,41 @@ function ConvertJSON(text) {
         nIndexStart = nIndexEnd + 2;
     }
     return dic;
+}
+
+//Mark if file exists
+function applyStatus(dir, dic) {
+
+    dic.forEach(rec => {
+        var pathname = dir + rec.en + ".mp3";
+        var pathname_ = dir + rec.en + "--.mp3";
+        if (fs.existsSync(pathname)) {
+            rec.status += " " + _STATUS_WORD;
+        }
+        if (fs.existsSync(pathname_)) {
+            rec.status += " " + _STATUS_NOTE;
+        }
+    });
+}
+
+function findItem(dic, en) {
+
+    for (var i = 0; i < dic.length; i++) {
+        var rec = dic[i];
+        if (rec.en == en) {
+            return rec;
+        }
+    }
+    return null;
+}
+
+function updateConfig(hidden){
+    var json = fs.readFileSync(CONFIG_FILEPATH());
+    json = JSON.parse(json);
+    json.Hidden = hidden;
+    var data = JSON.stringify(json, null, 3);
+    fs.writeFileSync(CONFIG_FILEPATH(), data);
+    return data;
 }
 
 app.get('/Subjects', function (req, res) {
@@ -485,8 +557,9 @@ app.get('/Subjects', function (req, res) {
                 const topic = req.query.topic;
                 const bRuVisible = (req.query.bRuVisible == "true");
                 const bEnVisible = (req.query.bEnVisible == "true");
+                const bHidVisible = (req.query.bHidVisible == "true");
                 var json = { "dic": [] };
-
+                //Check the topic
                 if (topic == null || topic.length == 0) {
                     return res.end(Response("FAIL", "Topic field is empty", null));
                 }
@@ -495,11 +568,11 @@ app.get('/Subjects', function (req, res) {
                 if (!fs.existsSync(filePath)) {
                     return res.end(Response("FAIL", "Topic not found ==> " + filePath, null));
                 }
-
+                //If json file is missing, then create json
                 var filePathJson = SUBJECTS_FOLDER + topic + "/" + topic + ".json";
                 if (!fs.existsSync(filePathJson)) {
                     var data = fs.readFileSync(filePath);
-                    var dic = ConvertJSON(data, bRuVisible, bEnVisible);
+                    var dic = ConvertJSON(data);
                     json.dic = dic;
                     var ddd = JSON.stringify(json, null, 3);
                     fs.writeFileSync(filePathJson, ddd);
@@ -508,8 +581,11 @@ app.get('/Subjects', function (req, res) {
                     json = fs.readFileSync(filePathJson);
                     json = JSON.parse(json);
                 }
+                var topicFolder = MP3_FOLDER;
 
-                var html = ConvertToHTML(json.dic, bRuVisible, bEnVisible);
+                applyStatus(topicFolder, json.dic);
+
+                var html = ConvertToHTML(json.dic, bRuVisible, bEnVisible, bHidVisible);
                 return res.end(Response("HTML", json.dic.length, html));
             }
             break;
@@ -519,6 +595,78 @@ app.get('/Subjects', function (req, res) {
 
     return res.end(Response("FAIL", "Wrong command ==> " + cmd, null));
 })
+
+app.post('/Subjects', function (req, res) {
+
+    LogParams(req, "Subjects Post");
+
+    var cmd = req.body.cmd;
+
+    switch (cmd) {
+        case "HideItem":
+        case "ShowItem":
+            {
+                const en = req.body.en;
+                const bRuVisible = (req.body.bRuVisible == true);
+                const bEnVisible = (req.body.bEnVisible == true);
+                const bHidVisible = (req.body.bHidVisible == true);
+                const topic = req.body.topic;
+                const filePathJson = SUBJECTS_FOLDER + topic + "/" + topic + ".json";
+
+                if (!fs.existsSync(filePathJson)) {
+                    return res.end(Response("FAIL", "File not found ==> " + filePathJson, null));
+                }
+                var json = fs.readFileSync(filePathJson);
+                json = JSON.parse(json);
+                var rec = findItem(json.dic, en);
+                if (rec != null) {
+                    rec.state = cmd == "HideItem" ? _STATE_HIDDEN : _STATE_VISIBLE;
+                    var data = JSON.stringify(json, null, 3);
+                    fs.writeFileSync(filePathJson, data);
+                    json = JSON.parse(data);
+                }
+
+                var mp3Folder = MP3_FOLDER;
+                applyStatus(mp3Folder, json.dic);
+                var html = ConvertToHTML(json.dic, bRuVisible, bEnVisible, bHidVisible);
+
+                updateConfig(bHidVisible);
+
+                return res.end(Response("HTML", json.dic.length, html));
+            }
+            break;
+        case "GetConfig":
+            {
+                var filePath = CONFIG_FILEPATH();
+                var config;
+                if (!fs.existsSync(filePath)) {
+                    config = { "Hidden": true };
+                }
+                else {
+                    config = fs.readFileSync(filePath);
+                    config = JSON.parse(config);
+                }
+                var dic = [];
+                dic.push(config);
+                return res.end(Response("CFG", "Note 1",dic));
+            }
+            break;
+        case "PutConfig":
+            {
+                const bHidden = req.body.bHidVisible;
+                updateConfig(bHidden);
+                var dic = [];
+                dic.push(config);
+                return res.end(Response("CFG", "Note 2",dic));
+            }
+            break;
+        default:
+            break;
+    }
+
+    return res.end(Response("FAIL", "Wrong command ==> " + cmd, null));
+})
+
 
 app.listen(port, () => {
     console.log(`My vocabulary is starting on port ${port}`)

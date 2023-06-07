@@ -8,27 +8,32 @@
     <link rel="stylesheet" href="index.css">
 </head>
 
-<body onload="reqTopics()">
+<body onload="onInit()">
     <table align="center" width='100%' border=2>
         <tr>
-            <th width="50px" id="cap_">Subjects:</th>
-            <td width="30%" align="left">
-                <select id="Topics" name="Topics" title="TTT" onchange="onTopicChange(event)" style="width:100%">
+            <th width="50;" id="cap_">Subjects:</th>
+            <td width="100;" align="left">
+                <select id="Topics" name="Topics" title="TTT" onchange="onTopicChange(event)"
+                    style="width:100%; height:40px;">
                 </select>
             </td>
             <td style="width:20%">
                 <video controls="" autoplay="" name="media" id="mediaplayer" src="" type="audio/mpeg" width="100%"
-                    height="20""></video>
+                    height="30"></video>
             </td>
             <td style=" width:10%">
-                    <input type='checkbox' id='idEnCheckbox' name="group2" checked onchange="onCbChange(event)">
-                    English</input>
+                <input type='checkbox' id='idEnCheckbox' name="group2" checked onchange="onCbChange(event)">
+                English</input>
             </td>0
             <td style="width:10%">
                 <input type='checkbox' id='idRuCheckbox' name="group2" checked
                     onchange="onCbChange(event)">Russian</input>
             </td>
-            <td style="width:10%"> 
+            <td style="width:10%">
+                <input type='checkbox' id='idHiddenCheckbox' name="g" checked
+                    onchange="reqPutConfig()">Hidden</input>
+            </td>
+            <td style="width:10%">
                 <input style="width:100%;" type="submit" name="button" value="Play All" onclick="onButtonPlayLoop()" />
                 <input style="width:100%;" type="submit" name="button" value="Stop All" onclick="onButtonStopLoop()" />
             </td>
@@ -53,7 +58,7 @@
 
             let json = JSON.parse(this.responseText);
             var dic = json.dic;
-
+//alert(dic)
             if (json.Status == "HTML") {
                 rowCount = json.Count;
                 var html = dic;
@@ -72,6 +77,10 @@
                 //Request table of 
                 reqTopic(Topics.value);
             }
+            else if (json.Status == "CFG") {
+                var Hidden = json.dic[0].Hidden;
+                document.getElementById('idHiddenCheckbox').checked = Hidden;
+            }
             else {
                 var reply = JSON.stringify(json, null, 3);
                 doc.write(reply);
@@ -80,11 +89,16 @@
 
             if (json.Status == "HTML") {
                 for (var i = 1; i < dic.length + 1; i++) {
-                    var idEn = "E" + i;
+                    var idEn = "E" + i; //English
+                    var idSt = "S" + i; //State
                     const en = doc.getElementById(idEn);
                     if (en != null) {
                         en.addEventListener("click", reqMP3File, false);
                         en.addEventListener("dblclick", reqMP3SentenceFile, false);
+                    }
+                    const State = doc.getElementById(idSt);
+                    if (State != null) {
+                        State.addEventListener("change", reqHide, false);
                     }
                 }
             }
@@ -93,14 +107,43 @@
         function ajaxGet(url, data) {
             var bRuVisible = document.getElementById('idRuCheckbox').checked;
             var bEnVisible = document.getElementById('idEnCheckbox').checked;
+            var bHidVisible = document.getElementById('idHiddenCheckbox').checked;
 
-            var filter = "&bRuVisible=" + bRuVisible + "&bEnVisible=" + bEnVisible;
+            var filter = "&bRuVisible=" + bRuVisible + "&bEnVisible=" + bEnVisible + "&bHidVisible=" + bHidVisible;
             let data_filter = data + filter;
             var oReq = new XMLHttpRequest();
             oReq.addEventListener("load", ajaxShowResponse);
             oReq.open("GET", url + "?" + data_filter);
             oReq.send();
 
+
+        }
+
+        function ajaxPost(url, body) {
+            var oReq = new XMLHttpRequest();
+            oReq.addEventListener("load", ajaxShowResponse);
+            oReq.open("POST", url);
+            oReq.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            oReq.send(body);
+        }
+
+        function reqPost(cmd, topic, en) {
+            var bRuVisible = document.getElementById('idRuCheckbox').checked;
+            var bEnVisible = document.getElementById('idEnCheckbox').checked;
+            var bHidVisible = document.getElementById('idHiddenCheckbox').checked;
+            var body = {
+                "cmd": cmd, "en": en, "ru": "", "cat": "",
+                "status": "", "state": "", "topic": topic,
+                "bRuVisible": bRuVisible, "bEnVisible": bEnVisible, "bHidVisible": bHidVisible
+            };
+            var body = JSON.stringify(body);
+            ajaxPost("/Subjects", body);
+        }
+
+        function onInit() {
+            reqTopics();
+            reqConfig();
+            Play("welcome.mp3");
         }
 
         function reqTopics() {
@@ -123,6 +166,37 @@
             Play(file);
         }
 
+        function reqHide(e) {
+            var cheched = e.target.checked;
+            var target = e.target || e.srcElement;
+            var tableRow = target.parentElement.parentElement;
+            var itemEn = tableRow.children.item(1).innerText;
+            var topic = document.getElementById('Topics').value;
+            if (cheched) {
+                reqPost("HideItem", topic, itemEn);
+            }
+            else {
+                reqPost("ShowItem", topic, itemEn);
+            }
+        }
+
+        function reqConfig() {
+            reqPost("GetConfig", "", "");
+        }
+
+        function reqPutConfig(){
+            var bRuVisible = document.getElementById('idRuCheckbox').checked;
+            var bEnVisible = document.getElementById('idEnCheckbox').checked;
+            var bHidVisible = document.getElementById('idHiddenCheckbox').checked;
+            var body = {
+                "cmd": "PutConfig", "en": "", "ru": "", "cat": "",
+                "status": "", "state": "", "topic": "",
+                "bRuVisible": bRuVisible, "bEnVisible": bEnVisible, "bHidVisible": bHidVisible
+            };
+            var body = JSON.stringify(body);
+            ajaxPost("/Subjects", body);
+        }
+ 
         function delay(time) {
             return new Promise(resolve => setTimeout(resolve, time));
         }
@@ -135,10 +209,12 @@
                 await delay(2000);
             }
         }
-        function onButtonStopLoop(){
+
+        function onButtonStopLoop() {
             loop = false;
-            Play("welcome.mp3");
+            Play("welcome.mp3.");
         }
+
         function PlayByIndex(index) {
             var media = document.getElementById('mediaplayer');
             var topic = document.getElementById('Topics').value;

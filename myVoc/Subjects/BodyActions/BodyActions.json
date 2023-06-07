@@ -3,77 +3,100 @@
       {
          "en": "sigh",
          "ru": "вздох",
-         "cat": ""
-      },
-      {
-         "en": "sniff",
-         "ru": "нюхать",
-         "cat": ""
+         "cat": "",
+         "status": "",
+         "state": "hidden"
       },
       {
          "en": "blow your nose",
          "ru": "сморкаться",
-         "cat": ""
+         "cat": "",
+         "status": "",
+         "state": "hidden"
       },
       {
          "en": "drool",
          "ru": "пускать слюни",
-         "cat": ""
+         "cat": "",
+         "status": "",
+         "state": "hidden"
       },
       {
          "en": "blush",
          "ru": "краснеть",
-         "cat": ""
+         "cat": "",
+         "status": "",
+         "state": "hidden"
       },
       {
          "en": "yawn",
          "ru": "зевать",
-         "cat": ""
+         "cat": "",
+         "status": "",
+         "state": "hidden"
       },
       {
          "en": "shrug",
          "ru": "пожимание плечами",
-         "cat": ""
+         "cat": "",
+         "status": "",
+         "state": "hidden"
       },
       {
          "en": "clap",
          "ru": "хлопать в ладоши",
-         "cat": ""
+         "cat": "",
+         "status": "",
+         "state": "hidden"
       },
       {
          "en": "slap",
          "ru": "шлепок",
-         "cat": ""
+         "cat": "",
+         "status": "",
+         "state": "hidden"
       },
       {
          "en": "punch",
          "ru": "ударить кулаком",
-         "cat": ""
+         "cat": "",
+         "status": "",
+         "state": "hidden"
       },
       {
          "en": "squat",
          "ru": "приседать",
-         "cat": ""
+         "cat": "",
+         "status": "",
+         "state": ""
       },
       {
          "en": "crouch",
          "ru": "присесть",
-         "cat": ""
+         "cat": "",
+         "status": "",
+         "state": ""
       },
       {
          "en": "stomp",
          "ru": "топать",
-         "cat": ""
+         "cat": "",
+         "status": "",
+         "state": ""
       },
       {
          "en": "stumble",
          "ru": "спотыкаться",
-         "cat": ""
+         "cat": "",
+         "status": "",
+         "state": ""
       },
       {
          "en": "slip",
          "ru": "соскальзывать",
-         "cat": ""
+         "cat": "",
+         "status": "",
+         "state": ""
       }
    ]
 }
