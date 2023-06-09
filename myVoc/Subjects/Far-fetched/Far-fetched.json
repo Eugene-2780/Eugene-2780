@@ -1,0 +1,655 @@
+{
+   "dic": [
+      {
+         "en": "far-fetched",
+         "ru": "надуманный",
+         "cat": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "obscure",
+         "ru": "неясный",
+         "cat": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "frivolous",
+         "ru": "легкомысленный",
+         "cat": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "exorbitant",
+         "ru": "непомерный",
+         "cat": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "tempting",
+         "ru": "соблазнительный",
+         "cat": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "hinder",
+         "ru": "препятствовать",
+         "cat": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "eye-popping",
+         "ru": "сногсшибательный",
+         "cat": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "slur",
+         "ru": "оскорбление",
+         "cat": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "fed up",
+         "ru": "сыт по горло",
+         "cat": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "rigorous",
+         "ru": "тщательный",
+         "cat": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "meticulous",
+         "ru": "дотошный",
+         "cat": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "misconception",
+         "ru": "заблуждение",
+         "cat": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "delusion",
+         "ru": "заблуждение",
+         "cat": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "rampant",
+         "ru": "безудержный",
+         "cat": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "redemption",
+         "ru": "искупление",
+         "cat": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "contingency",
+         "ru": "случайность",
+         "cat": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "astonish",
+         "ru": "удивлять",
+         "cat": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "aspire",
+         "ru": "стремиться",
+         "cat": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "stigma",
+         "ru": "клеймо",
+         "cat": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "formidable",
+         "ru": "грозный",
+         "cat": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "pitch",
+         "ru": "подача",
+         "cat": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "faint",
+         "ru": "слабый",
+         "cat": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "stretcher",
+         "ru": "носилки",
+         "cat": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "headbutt",
+         "ru": "удар головой",
+         "cat": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "cope",
+         "ru": "справляться",
+         "cat": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "landmarks",
+         "ru": "Ориентиры",
+         "cat": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "daunting",
+         "ru": "пугающий",
+         "cat": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "sanity",
+         "ru": "здравомыслие",
+         "cat": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "snowdrift",
+         "ru": "сугроб",
+         "cat": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "bonfire",
+         "ru": "костер",
+         "cat": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "emerge",
+         "ru": "появляться",
+         "cat": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "paramount",
+         "ru": "первостепенный",
+         "cat": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "encompasses",
+         "ru": "охватывает",
+         "cat": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "keep up",
+         "ru": "поддерживать",
+         "cat": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "flourish",
+         "ru": "процветать",
+         "cat": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "streamlined",
+         "ru": "обтекаемый",
+         "cat": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "a figment of your imagination",
+         "ru": "плод твоего воображения",
+         "cat": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "backlash",
+         "ru": "обратная реакция",
+         "cat": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "rummaging through",
+         "ru": "рыться в",
+         "cat": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "craze",
+         "ru": "помешательство",
+         "cat": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "in the nick of time",
+         "ru": "в последний момент",
+         "cat": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "arbitrary",
+         "ru": "произвольный",
+         "cat": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "brash",
+         "ru": "дерзкий",
+         "cat": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "indifferent",
+         "ru": "безразличный",
+         "cat": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "sneak",
+         "ru": "красться",
+         "cat": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "sneaky",
+         "ru": "подлый",
+         "cat": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "sneakily",
+         "ru": "украдкой",
+         "cat": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "derogatory",
+         "ru": "уничижительный",
+         "cat": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "reckless",
+         "ru": "безрассудный",
+         "cat": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "gloomy",
+         "ru": "хмурый",
+         "cat": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "stamina",
+         "ru": "выносливость",
+         "cat": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "blunder",
+         "ru": "грубая ошибка",
+         "cat": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "vigilant",
+         "ru": "бдительный",
+         "cat": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "obsessed",
+         "ru": "одержимый",
+         "cat": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "stunt",
+         "ru": "prevent from growing",
+         "cat": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "repercussion",
+         "ru": "последствия",
+         "cat": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "preposterous",
+         "ru": "нелепый",
+         "cat": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "verbose",
+         "ru": "подробный",
+         "cat": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "oblivious",
+         "ru": "забывчивый",
+         "cat": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "overburden",
+         "ru": "перегружать",
+         "cat": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "defer",
+         "ru": "откладывать",
+         "cat": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "landlocked",
+         "ru": "не имеющий выхода к морю",
+         "cat": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "rocking the boat",
+         "ru": "disturb the harmony of the situation",
+         "cat": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "foibles",
+         "ru": "слабости, ",
+         "cat": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "foible",
+         "ru": "слабая струнка",
+         "cat": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "gripes",
+         "ru": "жалобы",
+         "cat": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "exasperate",
+         "ru": "раздражать, сердить",
+         "cat": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "nibble",
+         "ru": "грызть",
+         "cat": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "candor",
+         "ru": "откровенность",
+         "cat": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "conceal",
+         "ru": "скрывать",
+         "cat": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "bottle up",
+         "ru": "скрывать, сдерживать",
+         "cat": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "riled up",
+         "ru": "взбесить",
+         "cat": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "sing his praises",
+         "ru": "петь ему дифирамбы",
+         "cat": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "molesting",
+         "ru": "приставание",
+         "cat": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "persevere",
+         "ru": "упорствовать",
+         "cat": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "encroaching",
+         "ru": "посягательство",
+         "cat": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "adversary",
+         "ru": "противник",
+         "cat": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "divulge",
+         "ru": "разглашать",
+         "cat": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "stumbling",
+         "ru": "спотыкаясь",
+         "cat": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "drunk",
+         "ru": "пьяный",
+         "cat": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "linchpins",
+         "ru": "стержни",
+         "cat": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "astonishingly",
+         "ru": "удивительно",
+         "cat": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "irrevocably",
+         "ru": "безвозвратно ",
+         "cat": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "irredeemably",
+         "ru": "непоправимо",
+         "cat": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "pathetic.",
+         "ru": "жалкий.",
+         "cat": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "turret",
+         "ru": "башня",
+         "cat": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "baffled",
+         "ru": "сбитый с толку",
+         "cat": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "annihilated",
+         "ru": "уничтожен",
+         "cat": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "nimble",
+         "ru": "проворный",
+         "cat": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "ditch",
+         "ru": "канава",
+         "cat": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "grinder",
+         "ru": "мясорубка",
+         "cat": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "blatant lie",
+         "ru": "наглая ложь",
+         "cat": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "moot",
+         "ru": "спорный",
+         "cat": "",
+         "status": "",
+         "state": ""
+      }
+   ]
+}

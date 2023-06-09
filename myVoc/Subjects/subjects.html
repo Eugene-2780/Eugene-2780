@@ -58,7 +58,6 @@
 
             let json = JSON.parse(this.responseText);
             var dic = json.dic;
-//alert(dic)
             if (json.Status == "HTML") {
                 rowCount = json.Count;
                 var html = dic;
@@ -98,7 +97,7 @@
                     }
                     const State = doc.getElementById(idSt);
                     if (State != null) {
-                        State.addEventListener("change", reqHide, false);
+                        State.addEventListener("change", reqHideRow, false);
                     }
                 }
             }
@@ -115,8 +114,6 @@
             oReq.addEventListener("load", ajaxShowResponse);
             oReq.open("GET", url + "?" + data_filter);
             oReq.send();
-
-
         }
 
         function ajaxPost(url, body) {
@@ -142,7 +139,7 @@
 
         function onInit() {
             reqTopics();
-            reqConfig();
+            reqGetConfig();
             Play("welcome.mp3");
         }
 
@@ -155,6 +152,11 @@
             var args = "cmd=Read_topic&topic=" + topic;
             ajaxGet("/Subjects", args);
         }
+        
+        function reqCurTopic() {
+            var topic = document.getElementById('Topics').value;
+            reqTopic(topic);
+        }
 
         function reqMP3File(e) {
             var file = e.target.innerText + ".mp3";
@@ -166,7 +168,7 @@
             Play(file);
         }
 
-        function reqHide(e) {
+        function reqHideRow(e) {
             var cheched = e.target.checked;
             var target = e.target || e.srcElement;
             var tableRow = target.parentElement.parentElement;
@@ -180,7 +182,7 @@
             }
         }
 
-        function reqConfig() {
+        function reqGetConfig() {
             reqPost("GetConfig", "", "");
         }
 
@@ -195,6 +197,7 @@
             };
             var body = JSON.stringify(body);
             ajaxPost("/Subjects", body);
+            reqCurTopic();
         }
  
         function delay(time) {

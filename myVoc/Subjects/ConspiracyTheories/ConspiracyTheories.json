@@ -5,7 +5,7 @@
          "ru": "диковинный",
          "cat": "",
          "status": "",
-         "state": ""
+         "state": "hidden"
       },
       {
          "en": "clandestine",
@@ -47,14 +47,14 @@
          "ru": "зверства",
          "cat": "",
          "status": "",
-         "state": ""
+         "state": "hidden"
       },
       {
          "en": "sway",
          "ru": "качаться",
          "cat": "",
          "status": "",
-         "state": ""
+         "state": "hidden"
       },
       {
          "en": "concocted",

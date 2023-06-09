@@ -1,0 +1,340 @@
+{
+   "dic": [
+      {
+         "en": "English",
+         "ru": "Русский",
+         "cat": "Other",
+         "sub":"", "status":"","state":""
+      },
+      {
+         "en": "conducive",
+         "ru": "благоприятный",
+         "cat": "Expression",
+"sub":"", "status":"","state":""
+      },
+      {
+         "en": "furious",
+         "ru": "яростный",
+         "cat": "Emotions",
+"sub":"", "status":"","state":""
+      },
+      {
+         "en": "susceptible",
+         "ru": "восприимчивый",
+         "cat": "Trait",
+"sub":"", "status":"","state":""
+      },
+      {
+         "en": "stark",
+         "ru": "суровый",
+         "cat": "Emotions",
+"sub":"", "status":"","state":""
+      },
+      {
+         "en": "distracted",
+         "ru": "рассеянный",
+         "cat": "Emotions",
+"sub":"", "status":"","state":""
+      },
+      {
+         "en": "scatterbrained",
+         "ru": "distracted, thinking about many different things",
+         "cat": "Emotions",
+"sub":"", "status":"","state":""
+      },
+      {
+         "en": "burnt out",
+         "ru": "разочарованный в своих силах",
+         "cat": "Emotions",
+"sub":"", "status":"","state":""
+      },
+      {
+         "en": "in a rut",
+         "ru": "stuck in the same routine",
+         "cat": "Expression",
+"sub":"", "status":"","state":""
+      },
+      {
+         "en": "slopy",
+         "ru": "небрежный",
+         "cat": "Trait",
+"sub":"", "status":"","state":""
+      },
+      {
+         "en": "intrepid",
+         "ru": "бесстрашный",
+         "cat": "Trait",
+"sub":"", "status":"","state":""
+      },
+      {
+         "en": "frivolous",
+         "ru": "легкомысленный",
+         "cat": "Trait",
+"sub":"", "status":"","state":""
+      },
+      {
+         "en": "tempting",
+         "ru": "соблазнительный",
+         "cat": "Trait",
+"sub":"", "status":"","state":""
+      },
+      {
+         "en": "rigorous",
+         "ru": "тщательный",
+         "cat": "Trait",
+"sub":"", "status":"","state":""
+      },
+      {
+         "en": "meticulous",
+         "ru": "дотошный",
+         "cat": "Trait",
+"sub":"", "status":"","state":""
+      },
+      {
+         "en": "formidable",
+         "ru": "грозный",
+         "cat": "Trait",
+"sub":"", "status":"","state":""
+      },
+      {
+         "en": "grievances",
+         "ru": "обиды",
+         "cat": "Emotions",
+"sub":"", "status":"","state":""
+      },
+      {
+         "en": "concocted",
+         "ru": "состряпан",
+         "cat": "Other",
+"sub":"", "status":"","state":""
+      },
+      {
+         "en": "brash",
+         "ru": "дерзкий",
+         "cat": "Trait",
+"sub":"", "status":"","state":""
+      },
+      {
+         "en": "indifferent",
+         "ru": "безразличный",
+         "cat": "Trait",
+"sub":"", "status":"","state":""
+      },
+      {
+         "en": "reckless",
+         "ru": "безрассудный",
+         "cat": "Trait",
+"sub":"", "status":"","state":""
+      },
+      {
+         "en": "vigilant",
+         "ru": "бдительный",
+         "cat": "Trait",
+"sub":"", "status":"","state":""
+      },
+      {
+         "en": "obsessed",
+         "ru": "одержимый",
+         "cat": "Trait",
+"sub":"", "status":"","state":""
+      },
+      {
+         "en": "candor",
+         "ru": "откровенность",
+         "cat": "Trait",
+"sub":"", "status":"","state":""
+      },
+      {
+         "en": "lenient",
+         "ru": "снисходительный",
+         "cat": "Trait",
+"sub":"", "status":"","state":""
+      },
+      {
+         "en": "lavish",
+         "ru": "щедрый",
+         "cat": "Trait",
+"sub":"", "status":"","state":""
+      },
+      {
+         "en": "conscientious",
+         "ru": "добросовестный",
+         "cat": "Trait",
+"sub":"", "status":"","state":""
+      },
+      {
+         "en": "constricted",
+         "ru": "ограниченный",
+         "cat": "Trait",
+"sub":"", "status":"","state":""
+      },
+      {
+         "en": "authentic",
+         "ru": "подлинный",
+         "cat": "Trait",
+"sub":"", "status":"","state":""
+      },
+      {
+         "en": "outspoken",
+         "ru": "откровенный",
+         "cat": "Trait",
+"sub":"", "status":"","state":""
+      },
+      {
+         "en": "venerable ",
+         "ru": "почтенный",
+         "cat": "Trait",
+"sub":"", "status":"","state":""
+      },
+      {
+         "en": "pathetic",
+         "ru": "жалкий",
+         "cat": "Trait",
+"sub":"", "status":"","state":""
+      },
+      {
+         "en": "apprehensive",
+         "ru": "опасающийся",
+         "cat": "Trait",
+"sub":"", "status":"","state":""
+      },
+      {
+         "en": "responsible",
+         "ru": "ответственный",
+         "cat": "Trait",
+"sub":"", "status":"","state":""
+      },
+      {
+         "en": "empathetic",
+         "ru": "чуткий",
+         "cat": "Trait",
+"sub":"", "status":"","state":""
+      },
+      {
+         "en": "prolific",
+         "ru": "плодовитый",
+         "cat": "Trait",
+"sub":"", "status":"","state":""
+      },
+      {
+         "en": "foes",
+         "ru": "враги",
+         "cat": "Other",
+"sub":"", "status":"","state":""
+      },
+      {
+         "en": "myriad",
+         "ru": "несчетное число",
+         "cat": "Other",
+"sub":"", "status":"","state":""
+      },
+      {
+         "en": "ergo",
+         "ru": "следовательно",
+         "cat": "Other",
+"sub":"", "status":"","state":""
+      },
+      {
+         "en": "endure",
+         "ru": "терпеть",
+         "cat": "Other",
+"sub":"", "status":"","state":""
+      },
+      {
+         "en": "prop up",
+         "ru": "подпирать",
+         "cat": "Other",
+"sub":"", "status":"","state":""
+      },
+      {
+         "en": "inept",
+         "ru": "неумелый",
+         "cat": "Trait",
+"sub":"", "status":"","state":""
+      },
+      {
+         "en": "oppressor",
+         "ru": "угнетатель",
+         "cat": "Other",
+"sub":"", "status":"","state":""
+      },
+      {
+         "en": "underdog",
+         "ru": "аутсайдер",
+         "cat": "Other",
+"sub":"", "status":"","state":""
+      },
+      {
+         "en": "unconscionable",
+         "ru": "бессовестный",
+         "cat": "Other",
+"sub":"", "status":"","state":""
+      },
+      {
+         "en": "iffy",
+         "ru": "сомнительный",
+         "cat": "Other",
+"sub":"", "status":"","state":""
+      },
+      {
+         "en": "perseverance",
+         "ru": "упорство",
+         "cat": "Other",
+"sub":"", "status":"","state":""
+      },
+      {
+         "en": "eminent",
+         "ru": "выдающийся",
+         "cat": "Trait",
+"sub":"", "status":"","state":""
+      },
+      {
+         "en": "pounded",
+         "ru": "толченый",
+         "cat": "Other",
+"sub":"", "status":"","state":""
+      },
+      {
+         "en": "masterpieces",
+         "ru": "шедевры",
+         "cat": "Other",
+"sub":"", "status":"","state":""
+      },
+      {
+         "en": "diminish",
+         "ru": "уменьшить",
+         "cat": "Other",
+"sub":"", "status":"","state":""
+      },
+      {
+         "en": "grasp",
+         "ru": "понять, схватывать",
+         "cat": "Other",
+"sub":"", "status":"","state":""
+      },
+      {
+         "en": "downside",
+         "ru": "обратная сторона, недостаток",
+         "cat": "Other",
+"sub":"", "status":"","state":""
+      },
+      {
+         "en": "fascinating",
+         "ru": "очаровательный",
+         "cat": "Trait",
+"sub":"", "status":"","state":""
+      },
+      {
+         "en": "oblivious",
+         "ru": "забывчивый",
+         "cat": "Trait",
+"sub":"", "status":"","state":""
+      },
+      {
+         "en": "vigorous",
+         "ru": "энергичный",
+         "cat": "Trait",
+"sub":"", "status":"","state":""
+      }
+   ]
+}

@@ -26,8 +26,8 @@ const _STATE_HIDDEN = "hidden";
 const _STATE_VISIBLE = "";
 const _FILE_CONFIG = "config.json";
 
-function DIC_FILEPATH(prefix = "") {
-    return DATA_FOLDER + prefix + "myDictionary.json";
+function DIC_FILEPATH() {
+    return DATA_FOLDER + "myDictionary.json";
 }
 function CONFIG_FILEPATH() {
     return DATA_FOLDER + _FILE_CONFIG;
@@ -353,7 +353,7 @@ function Filter(dic, en, ru, cat) {
     return result;
 }
 
-app.post('/vocab', (req, res) => {
+app.post('/vocab_off', (req, res) => {
 
     console.log('/vocab');
 
@@ -565,12 +565,13 @@ app.get('/Subjects', function (req, res) {
                 }
 
                 var filePath = SUBJECTS_FOLDER + topic + "/" + topic + ".txt";
-                if (!fs.existsSync(filePath)) {
-                    return res.end(Response("FAIL", "Topic not found ==> " + filePath, null));
-                }
                 //If json file is missing, then create json
                 var filePathJson = SUBJECTS_FOLDER + topic + "/" + topic + ".json";
                 if (!fs.existsSync(filePathJson)) {
+                    if (!fs.existsSync(filePath)) {
+                        return res.end(Response("FAIL", "Topic not found ==> " + filePath, null));
+                    }
+                    
                     var data = fs.readFileSync(filePath);
                     var dic = ConvertJSON(data);
                     json.dic = dic;
@@ -603,7 +604,7 @@ app.post('/Subjects', function (req, res) {
     var cmd = req.body.cmd;
 
     switch (cmd) {
-        case "HideItem":
+        case "HideItem": //show table row
         case "ShowItem":
             {
                 const en = req.body.en;
