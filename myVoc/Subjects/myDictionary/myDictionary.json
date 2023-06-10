@@ -18,7 +18,7 @@
       },
       {
          "en": "furious",
-         "ru": "яростный-1",
+         "ru": "яростный",
          "cat": "Trait",
          "sub": "",
          "status": "",
@@ -241,7 +241,7 @@
          "state": ""
       },
       {
-         "en": "venerable ",
+         "en": "venerable",
          "ru": "почтенный",
          "cat": "Trait",
          "sub": "",
@@ -457,7 +457,7 @@
          "state": ""
       },
       {
-         "en": "make concessions ",
+         "en": "make concessions",
          "ru": "идти на уступки",
          "cat": "Other",
          "sub": "",

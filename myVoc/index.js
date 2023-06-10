@@ -348,15 +348,15 @@ function Filter(dic, en, ru, cat) {
     var result = [];
     for (var i = 0; i < dic.length; i++) {
         var rec = dic[i];
-        let bEn = en.length == 0 || rec.en.indexOf(en) == 0;
-        let bCat = cat.length == 0 || rec.cat === cat;
+        let bEn = en == undefined || en.length == 0 || rec.en.indexOf(en) == 0;
+        let bCat = cat == undefined || cat.length == 0 || rec.cat === cat;
         if (bEn && bCat)
             result.push(rec);
     }
     return result;
 }
 
-app.post('/vocab', (req, res) => {
+app.post('/vocab_off', (req, res) => {
 
     console.log('/vocab');
 
@@ -734,10 +734,7 @@ app.post('/Subjects', function (req, res) {
                     var sdata = JSON.stringify(json, null, 3);
                     fs.writeFileSync(filePathJson, sdata);
 
-                    var result = Filter(dic, "", "", o.cat);
-
-                    applyMp3FileExists(result);
-                    var html = ConvertToHTML(result, true, true, true);
+                    var html = ToHTML(dic, cat);
     
                     return res.end(Response("HTML", json.dic.length, html));
                 }
