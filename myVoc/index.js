@@ -7,6 +7,7 @@ const bodyParser = require('body-parser')
 const bHtml = false;
 
 var fs = require("fs");
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public'));
@@ -26,9 +27,6 @@ const _STATE_HIDDEN = "hidden";
 const _STATE_VISIBLE = "";
 const _FILE_CONFIG = "config.json";
 
-function DIC_FILEPATH() {
-    return DATA_FOLDER + "myDictionary.json";
-}
 function CONFIG_FILEPATH() {
     return DATA_FOLDER + _FILE_CONFIG;
 }
@@ -102,10 +100,7 @@ function dicAdd(res, dic, inRec) {
     }
 
     //New assoc
-    var o = { "en": "", "ru": "", "cat": "g", "sub": "" };
-    o.en = en;
-    o.ru = ru;
-    o.cat = cat;
+    var o = { "en": en, "ru": ru, "cat": cat, "sub": "", "status": "", "state": "" };
     dic.push(o);
     return true;
 }
@@ -162,6 +157,7 @@ function HTMLBegin() {
         "<th width='10%'>Index</th>" +
         "<th width='15%'>English  </th>" +
         "<th>Russian</th>" +
+        "<th>Category</th>" +
         "<th>Status</th>" +
         "</tr>";
     html = html.concat(th);
@@ -183,8 +179,10 @@ function HTMLAddRow(rec, nIndex, bRuVisible, bEnVisible) {
     }
 
     var row = "<tr  id=\"" + 'ROW' + nIndex + "\" >";
-    var td = "<td>" + nIndex + "</td>";
+    //Index
+    var td = "<td width='5%'><input type='radio' id='RADIO" + nIndex + "' name='group' value='" + nIndex + "' >" + nIndex + "</td>";
     row = row.concat(td);
+    //English
     if (bEnVisible) {
         td = "<td id=\"" + 'E' + nIndex + "\" style=\"" + style + "\">" + rec.en + "</td>";
     }
@@ -192,6 +190,7 @@ function HTMLAddRow(rec, nIndex, bRuVisible, bEnVisible) {
         td = "<td id=\"" + 'E' + nIndex + "\" >" + "</td>";
     }
     row = row.concat(td);
+    //Russian
     if (bRuVisible) {
         td = "<td id=\"" + 'R' + nIndex + "\" >" + rec.ru + "</td>";
     }
@@ -199,8 +198,12 @@ function HTMLAddRow(rec, nIndex, bRuVisible, bEnVisible) {
         td = "<td id=\"" + 'R' + nIndex + "\" >" + "</td>";
     }
     row = row.concat(td);
+    //Category
+    td = "<td  width='5%'>" + rec.cat + "</td>";
+    row = row.concat(td);
 
-    td = "<td id=\"" + 'S' + nIndex + "\" >" + //rec.state +
+    //Status
+    td = "<td  width='5%' id=\"" + 'S' + nIndex + "\" >" + //rec.state +
         "<input type='checkbox' id='idHide" + nIndex + "' name='n' ";
     if (bHidden) {
         td += " checked   ";
@@ -353,7 +356,7 @@ function Filter(dic, en, ru, cat) {
     return result;
 }
 
-app.post('/vocab_off', (req, res) => {
+app.post('/vocab', (req, res) => {
 
     console.log('/vocab');
 
@@ -453,7 +456,8 @@ function ConvertJSON(text) {
 }
 
 //Mark if file exists
-function applyStatus(dir, dic) {
+function applyMp3FileExists(dic) {
+    var dir = MP3_FOLDER;
 
     dic.forEach(rec => {
         var pathname = dir + rec.en + ".mp3";
@@ -478,7 +482,7 @@ function findItem(dic, en) {
     return null;
 }
 
-function updateConfig(hidden){
+function updateConfig(hidden) {
     var json = fs.readFileSync(CONFIG_FILEPATH());
     json = JSON.parse(json);
     json.Hidden = hidden;
@@ -555,6 +559,7 @@ app.get('/Subjects', function (req, res) {
         case "Read_topic":
             {
                 const topic = req.query.topic;
+                const cat = req.query.cat;
                 const bRuVisible = (req.query.bRuVisible == "true");
                 const bEnVisible = (req.query.bEnVisible == "true");
                 const bHidVisible = (req.query.bHidVisible == "true");
@@ -571,7 +576,7 @@ app.get('/Subjects', function (req, res) {
                     if (!fs.existsSync(filePath)) {
                         return res.end(Response("FAIL", "Topic not found ==> " + filePath, null));
                     }
-                    
+
                     var data = fs.readFileSync(filePath);
                     var dic = ConvertJSON(data);
                     json.dic = dic;
@@ -582,12 +587,12 @@ app.get('/Subjects', function (req, res) {
                     json = fs.readFileSync(filePathJson);
                     json = JSON.parse(json);
                 }
-                var topicFolder = MP3_FOLDER;
 
-                applyStatus(topicFolder, json.dic);
+                applyMp3FileExists(json.dic);
+                var result = Filter(json.dic, "", "", cat);
 
-                var html = ConvertToHTML(json.dic, bRuVisible, bEnVisible, bHidVisible);
-                return res.end(Response("HTML", json.dic.length, html));
+                var html = ConvertToHTML(result, bRuVisible, bEnVisible, bHidVisible);
+                return res.end(Response("HTML", result.length, html));
             }
             break;
         default:
@@ -596,6 +601,12 @@ app.get('/Subjects', function (req, res) {
 
     return res.end(Response("FAIL", "Wrong command ==> " + cmd, null));
 })
+
+function ToHTML(dic, category,){
+    var result = Filter(dic, "", "", category);
+    applyMp3FileExists(result);
+    return ConvertToHTML(result, true, true, true);
+}
 
 app.post('/Subjects', function (req, res) {
 
@@ -627,8 +638,7 @@ app.post('/Subjects', function (req, res) {
                     json = JSON.parse(data);
                 }
 
-                var mp3Folder = MP3_FOLDER;
-                applyStatus(mp3Folder, json.dic);
+                applyMp3FileExists(json.dic);
                 var html = ConvertToHTML(json.dic, bRuVisible, bEnVisible, bHidVisible);
 
                 updateConfig(bHidVisible);
@@ -649,7 +659,7 @@ app.post('/Subjects', function (req, res) {
                 }
                 var dic = [];
                 dic.push(config);
-                return res.end(Response("CFG", "Note 1",dic));
+                return res.end(Response("CFG", "Note 1", dic));
             }
             break;
         case "PutConfig":
@@ -658,14 +668,86 @@ app.post('/Subjects', function (req, res) {
                 updateConfig(bHidden);
                 var dic = [];
                 dic.push(config);
-                return res.end(Response("CFG", "Note 2",dic));
+                return res.end(Response("CFG", "Note 2", dic));
+            }
+            break;
+        case "Edit":
+            {
+                const en = req.body.en;
+                const ru = req.body.ru;
+                const cat = req.body.cat;
+                const topic = req.body.topic;
+                if (en == null || en.length == 0) {
+                    res.end(Response("FAIL", "Empty English field", null));
+                    return;
+                }
+
+                const filePathJson = SUBJECTS_FOLDER + topic + "/" + topic + ".json";
+                var data = fs.readFileSync(filePathJson);
+
+                var json = JSON.parse(data);
+                var dic = json.dic;
+                var rec = findRec(dic, en);
+                if (rec == null) {
+                    //Not found
+                    var result = [];
+                    res.end(Response("FAIL", "Not found", result));
+                    return;
+                }
+
+                //Already exists
+                if (rec != null) {
+                    rec.ru = ru;
+                    rec.cat = cat;
+                }
+
+                //Replace current file with new assignment
+                var sdata = JSON.stringify(json, null, 3);
+                fs.writeFileSync(filePathJson, sdata);
+
+                var html = ToHTML(dic, cat);
+    
+                return res.end(Response("HTML", json.dic.length, html));
+            }
+            break;
+        case "Add":
+            {
+                const en = req.body.en;
+                const ru = req.body.ru;
+                const cat = req.body.cat;
+                const topic = req.body.topic;
+                if (en == null || en.length == 0) {
+                    res.end(Response("FAIL", "Empty English field", null));
+                    return;
+                }
+
+                const filePathJson = SUBJECTS_FOLDER + topic + "/" + topic + ".json";
+                var data = fs.readFileSync(filePathJson);
+
+                var json = JSON.parse(data);
+                var dic = json.dic;
+
+                var o = { "en": en, "ru": ru, "cat": cat, "sub": "", "status": "", "state": "" };
+                var bok = dicAdd(res, dic, o);
+                if (bok) {
+                    //Save in file
+                    var sdata = JSON.stringify(json, null, 3);
+                    fs.writeFileSync(filePathJson, sdata);
+
+                    var result = Filter(dic, "", "", o.cat);
+
+                    applyMp3FileExists(result);
+                    var html = ConvertToHTML(result, true, true, true);
+    
+                    return res.end(Response("HTML", json.dic.length, html));
+                }
             }
             break;
         default:
+            return res.end(Response("FAIL", "Wrong command ==> " + cmd, null));
             break;
     }
 
-    return res.end(Response("FAIL", "Wrong command ==> " + cmd, null));
 })
 
 

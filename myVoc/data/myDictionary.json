@@ -18,8 +18,8 @@
       },
       {
          "en": "furious",
-         "ru": "яростный-1",
-         "cat": "Trait",
+         "ru": "яростный",
+         "cat": "Emotions",
          "sub": "",
          "status": "",
          "state": ""
@@ -34,8 +34,8 @@
       },
       {
          "en": "stark",
-         "ru": "суровый",
-         "cat": "Trait",
+         "ru": "суровый-1",
+         "cat": "Emotions",
          "sub": "",
          "status": "",
          "state": ""
@@ -444,30 +444,6 @@
          "en": "vigorous",
          "ru": "энергичный",
          "cat": "Trait",
-         "sub": "",
-         "status": "",
-         "state": ""
-      },
-      {
-         "en": "severed",
-         "ru": "разорванный",
-         "cat": "Other",
-         "sub": "",
-         "status": "",
-         "state": ""
-      },
-      {
-         "en": "make concessions ",
-         "ru": "идти на уступки",
-         "cat": "Other",
-         "sub": "",
-         "status": "",
-         "state": ""
-      },
-      {
-         "en": "wary",
-         "ru": "осторожный",
-         "cat": "Other",
          "sub": "",
          "status": "",
          "state": ""

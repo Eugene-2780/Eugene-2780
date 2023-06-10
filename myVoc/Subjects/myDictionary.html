@@ -31,7 +31,6 @@
                 <input style="width:300px" type="text" value="" id="en" name="en" autocomplete="off" onchange="" />
                 <input type="button" name="button" value="Clear"
                     onclick="{document.getElementById('en').value = '' }" />
-                <input type='checkbox' id='idEnCheckbox' name="group2" checked onchange="onEnCbChange(event)">
             </td>
             <td align='center'> <input style="width:140px;" type="submit" name="button" value="Read"
                     onclick="doRead()" />
@@ -42,7 +41,6 @@
             <td style="width:400px">
                 <input style="width:300px" type="text" value="" id="ru" name="ru" />
                 <input type="button" name="button" value="Clear" onclick="document.getElementById('ru').value = ''" />
-                <input type='checkbox' id='idRuCheckbox' name="group2" checked onchange="onRuCbChange(event)">
             </td>
             <td align='center'> <input style="width:140px;" type="submit" name="button" value="Update"
                     onclick="doEdit()" />
@@ -51,8 +49,8 @@
         <tr>
             <td><label for="cat">Category:</label></td>
             <td style="width:400px">
-                <select style="width:308px" id="cat" name="cat" title="GGG" value="Emotions"
-                    onchange="onTopicChange_off(event)">
+                <select style="width:308px" id="cat" name="cat" title="GGG" value="All"
+                    onchange="onCategoryTopicChange(event)">
                     <option value="Emotions">Emotions</option>
                     <option value="Trait">Trait</option>
                     <option value="Expression">Expression</option>
@@ -77,94 +75,14 @@
 
     <script>
 
-        function HTMLBegin() {
-            var html = "<HTML>\n<BODY>\n<TABLE style=\"width:100%\" border=1 >\n";
-
-            var th =
-                "<tr>" +
-                "<th>Index</th>" +
-                "<th>English </th>" +
-                "<th>Russian </th>" +
-                "<th>Categoty</th>" +
-                "</tr>";
-            html = html.concat(th);
-            return html;
-        }
-
-        function HTMLAddRow(rec, nIndex, bRuVisible, bEnVisible) {
-            var row = "<tr  id=\"" + 'ROW' + nIndex + "\" >";
-            var td = "<td width='5%'><input type='radio' id='RADIO" + nIndex + "' name='group' value='" + nIndex + "' >" + nIndex + "</td>";
-            row = row.concat(td);
-            if (bEnVisible) {
-                td = "<td width='30%' id=\"" + 'E' + nIndex + "\" >" + rec.en + "</td>";
-            }
-            else {
-                td = "<td width='30%' id=\"" + 'E' + nIndex + "\" >" + "</td>";
-            }
-            row = row.concat(td);
-            if (bRuVisible) {
-                td = "<td width='50%'  id=\"" + 'R' + nIndex + "\" >" + rec.ru + "</td>";
-            }
-            else {
-                td = "<td width='50%'  id=\"" + 'R' + nIndex + "\" >" + "</td>";
-            }
-
-            row = row.concat(td);
-            td = "<td>" + rec.cat + "</td>";
-            row = row.concat(td);
-            row = row.concat("</tr>");
-            return row;
-        }
-
-        function HTMLEnd() {
-            return ("\n</TABLE>\n</BODY>\n</HTML>");
-        }
-
-        //Convert to html grid
-        function ConvertToHTML(result) {
-            var bRuVisible = document.getElementById('idRuCheckbox').checked;
-            var bEnVisible = document.getElementById('idEnCheckbox').checked;
-            var html = HTMLBegin();
-            var nIndex = 1;
-            for (var j = 0; j < result.length; j++) {
-                var rec = result[j];
-                var row = HTMLAddRow(rec, nIndex, bRuVisible, bEnVisible);
-                html = html.concat(row);
-                nIndex++;
-            }
-            html = html.concat(HTMLEnd());
-            return html;
-        }
-
-        function doEnglish(e) {
-            var target = e.target || e.srcElement;
-            var text = target.textContent || target.innerText;
-            Play(text);
-        }
-
-        function doRadio(e) {
-            var target = e.target || e.srcElement;
-            var tableRow = target.parentElement.parentElement;
-            var itemEn = tableRow.children.item(1).innerText;
-            var itemRu = tableRow.children.item(2).innerText;
-            var itemCa = tableRow.children.item(3).innerText;
-
-            document.getElementById('en').value = itemEn;
-            document.getElementById('ru').value = itemRu;
-            document.getElementById('cat').value = itemCa;
-        }
-
         function ajaxShowResponse() {
             var frm = document.getElementById('rsp');
             var doc = frm.contentDocument;
+            var rowCount = 0;
 
             let json = JSON.parse(this.responseText);
             var dic = json.dic;
-            if (json.Status == "OK") {
-                var html = ConvertToHTML(dic);
-                doc.write(html);
-            }
-            else if (json.Status == "HTML") {
+            if (json.Status == "HTML") {
                 rowCount = json.Count;
                 var html = dic;
                 doc.write(html);
@@ -199,46 +117,19 @@
                 }
                 const en = doc.getElementById(idEn);
                 if (en != null) {
-                    en.addEventListener("dblclick", doEnglish, false);
+                    en.addEventListener("click", playEnglish, false);
+                    en.addEventListener("dblclick", playEnglishSentence, false);
                 }
             }
         }
 
-        function onInit() {
-            Play('welcome');
-            reqTopics();
-        }
-        function reqTopics() {
-            var args = "cmd=Read_all_topics";
-            ajaxGet("/Subjects", args);
-        }
-
-        function reqTopic(topic) {
-            var args = "cmd=Read_topic&topic=" + topic;
-            ajaxGet("/Subjects", args);
-        }
-
-        function reqCurTopic() {
-            var topic = document.getElementById('Topics').value;
-            reqTopic(topic);
-        }
-
-        function onTopicChange_off(event) {
-            doRead();
-        }
-        function onRuCbChange(event) {
-            doRead();
-        }
-        function onEnCbChange(event) {
-            doRead();
-        }
-
         function ajaxGet(url, data) {
-            var bRuVisible = document.getElementById('idRuCheckbox').checked;
-            var bEnVisible = document.getElementById('idEnCheckbox').checked;
-            var bHidVisible = true;;
+            var bRuVisible = true;
+            var bEnVisible = true;
+            var bHidVisible = true;
+            var cat = document.getElementById('cat').value;
 
-            var filter = "&bRuVisible=" + bRuVisible + "&bEnVisible=" + bEnVisible + "&bHidVisible=" + bHidVisible;
+            var filter = "&bRuVisible=" + bRuVisible + "&bEnVisible=" + bEnVisible + "&bHidVisible=" + bHidVisible + "&cat=" + cat;
             let data_filter = data + filter;
             var oReq = new XMLHttpRequest();
             oReq.addEventListener("load", ajaxShowResponse);
@@ -254,17 +145,50 @@
             oReq.send(d);
         }
 
+
+        function reqTopics() {
+            var args = "cmd=Read_all_topics";
+            ajaxGet("/Subjects", args);
+        }
+
+        function reqTopic(topic) {
+            var args = "cmd=Read_topic&topic=" + topic;
+            ajaxGet("/Subjects", args);
+        }
+
+        function reqCurTopic() {
+            var topic = document.getElementById('Topics').value;
+            reqTopic(topic);
+        }
+
         function readReq(cmd) {
+       
             var en = document.getElementById('en').value;
             var ru = document.getElementById('ru').value;
             var cat = document.getElementById('cat').value;
-            var body = { "button": "Read", "en": "", "ru": "", "cat": "" };
-            body.button = cmd;
-            body.en = en;
-            body.ru = ru;
-            body.cat = cat;
+            var topic = document.getElementById('Topics').value;
+        
+            var body = 
+            { 
+                "cmd": cmd, "en": en, "ru": ru, "cat": cat,"topic":topic
+            };
             var body = JSON.stringify(body);
             return body
+        }
+
+        function onInit() {
+            Play('welcome');
+            reqTopics();
+            document.getElementById('cat').value = ""; // all category
+        }
+        function onCategoryTopicChange(event) {
+            doRead();
+        }
+        function onRuCbChange(event) {
+            doRead();
+        }
+        function onEnCbChange(event) {
+            doRead();
         }
 
         function onTopicChange(e) {
@@ -272,23 +196,17 @@
             reqTopic(text);
         }
 
-        function onTopicChange_old(e) {
-            var body = readReq("Read");
-            ajaxPost("/vocab", body);
-        }
-
         function doRead() {
-            var body = readReq("Read");
-            ajaxPost("/vocab", body);
+            reqCurTopic();
         }
 
         function doEdit() {
             var body = readReq("Edit");
-            ajaxPost("/vocab", body);
+            ajaxPost("/Subjects", body);
         }
         function doAdd() {
             var body = readReq("Add");
-            ajaxPost("/vocab", body);
+            ajaxPost("/Subjects", body);
         }
 
         function Play(en) {
@@ -297,10 +215,32 @@
             media.play();
         }
 
-        function doPlay() {
-            var en = document.getElementById('en').value;
-            Play(en);
+        function playEnglish(e) {
+            var target = e.target || e.srcElement;
+            var text = target.textContent || target.innerText;
+            Play(text);
         }
+        
+        function playEnglishSentence(e) {
+            var target = e.target || e.srcElement;
+            var text = target.textContent || target.innerText;
+            Play(text+"--");
+        }
+
+        function doRadio(e) {
+            var target = e.target || e.srcElement;
+            var tableRow = target.parentElement.parentElement;
+            var itemEn = tableRow.children.item(1).innerText;
+            var itemRu = tableRow.children.item(2).innerText;
+            var itemCa = tableRow.children.item(3).innerText;
+
+            document.getElementById('en').value = itemEn;
+            document.getElementById('ru').value = itemRu;
+            document.getElementById('cat').value = itemCa;
+        }
+
+    
+    
     </script>
 
 
