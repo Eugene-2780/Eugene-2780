@@ -15,10 +15,6 @@ app.use(express.static('public'));
 const { isNullOrUndefined } = require('util');
 
 const MP3_FOLDER = __dirname + "/mp3/";
-const HTML_FOLDER = __dirname + "/html/";
-const DATA_FOLDER = __dirname + "/data/";
-const MARVEL_FOLDER = __dirname + "/Marvel/";
-const THEMES_FOLDER = __dirname + "/Themes/";
 const SUBJECTS_FOLDER = __dirname + "/Subjects/";
 
 const _STATUS_WORD = "word";
@@ -28,7 +24,7 @@ const _STATE_VISIBLE = "";
 const _FILE_CONFIG = "config.json";
 
 function CONFIG_FILEPATH() {
-    return DATA_FOLDER + _FILE_CONFIG;
+    return __dirname + "/" + _FILE_CONFIG;
 }
 
 function findRec(assocs, en) {
@@ -106,10 +102,7 @@ function dicAdd(res, dic, inRec) {
 }
 
 app.get('/', function (req, res) {
-    res.sendFile(HTML_FOLDER + "index.html");
-});
-app.get('/vocab', function (req, res) {
-    res.sendFile(HTML_FOLDER + "vocab.html");
+    res.sendFile(__dirname + "/index.html");
 });
 
 /*
@@ -126,23 +119,6 @@ app.get('/play', function (req, res) {
     var file = en + ".mp3";
 
     var filePath = MP3_FOLDER + file;
-    if (!fs.existsSync(filePath)) {
-        return res.end(Response("FAIL", "File not found ==> " + file, null));
-    }
-    res.sendFile(filePath);
-})
-
-app.get('/Marvel', function (req, res) {
-    var s = "req.query : " + JSON.stringify(req.query, null, 3) + "\n";
-    console.log("Marvel ==> " + s);
-
-    var filename = req.query.filename;
-    if (filename == null || filename.length == 0) {
-        return res.end(Response("FAIL", "File name field is empty", null));
-    }
-    var file = filename;
-
-    var filePath = MARVEL_FOLDER + filename;
     if (!fs.existsSync(filePath)) {
         return res.end(Response("FAIL", "File not found ==> " + file, null));
     }
@@ -238,33 +214,6 @@ function ConvertToHTML(result, bRuVisible, bEnVisible, bHidVisible) {
     return html;
 }
 
-function HandleFiles(dir, dic) {
-    var files = fs.readdirSync(dir);
-
-    files.forEach(file => {
-        var pathname = dir + "/" + file;
-        if (fs.lstatSync(pathname).isDirectory()) {
-        }
-        else {
-            var rec = { "en": "", "ru": "" };
-            var bmp3 = path.extname(file) == ".mp3";
-            if (bmp3) {
-                var file_title = file.replace(".mp3", "");
-                rec.en = file_title;
-                rec.ru = ""; //Sentence
-
-                var file_txt = file.replace("mp3", "txt");
-                var file_txt_path = dir + "/" + file_txt;
-                if (fs.existsSync(file_txt_path)) {
-                    var data = fs.readFileSync(file_txt_path);
-                    rec.ru = data;
-                }
-
-                dic.push(rec);
-            }
-        }
-    })
-}
 //Folder means topic
 function CollectTopics(dir, dic) {
     var files = fs.readdirSync(dir);
@@ -285,65 +234,6 @@ function LogParams(req, cap) {
     console.log("== " + cap + " ==\n" + s);
 }
 
-//function readFiles
-app.get('/Themes', function (req, res) {
-
-
-    LogParams(req, "Themes");
-
-    var cmd = req.query.cmd;
-
-    switch (cmd) {
-        case "Read_topic":
-            {
-                var topic = req.query.topic;
-
-                if (topic == null || topic.length == 0) {
-                    return res.end(Response("FAIL", "Topic field is empty", null));
-                }
-                var filePath = THEMES_FOLDER + topic;
-                if (!fs.existsSync(filePath)) {
-                    return res.end(Response("FAIL", "Topic not found ==> " + filePath, null));
-                }
-                var dic = [];
-                HandleFiles(filePath, dic);
-                const bRuVisible = true;
-                const bEnVisible = true;
-
-                var html = ConvertToHTML(dic, bRuVisible, bEnVisible, true);
-
-                return res.end(Response("HTML", "Files", html));
-            }
-            break;
-        case "Read_all_topics":
-            {
-                var dic = [];
-                var filePath = THEMES_FOLDER;
-                CollectTopics(filePath, dic);
-                return res.end(Response("TOPICS", "Folders", dic));
-            }
-            break;
-        case "Read_file":
-            {
-                var filename = req.query.filename;
-
-                if (filename == null || filename.length == 0) {
-                    return res.end(Response("FAIL", "File name field is empty", null));
-                }
-                var filePath = THEMES_FOLDER + filename;
-                if (!fs.existsSync(filePath)) {
-                    return res.end(Response("FAIL", "File not found ==> " + filePath, null));
-                }
-                return res.sendFile(filePath);
-            }
-            break;
-        default:
-            break;
-    }
-
-    return res.end(Response("FAIL", "Wrong command ==> " + cmd, null));
-})
-
 function Filter(dic, en, ru, cat) {
     var result = [];
     for (var i = 0; i < dic.length; i++) {
@@ -355,77 +245,6 @@ function Filter(dic, en, ru, cat) {
     }
     return result;
 }
-
-app.post('/vocab_off', (req, res) => {
-
-    console.log('/vocab');
-
-    fs.readFile(DIC_FILEPATH(), 'utf8', function (err, ddd) {
-
-        var data = JSON.parse(ddd);
-        var dic = data.dic;
-        var cmd = req.body.button;
-
-        var en = req.body.en;
-        var ru = req.body.ru;
-        var cat = req.body.cat;
-
-        console.log(req.body);
-        switch (cmd) {
-            case "Read": {
-                var result = Filter(dic, en, ru, cat);
-                res.end(Response("OK", "Filtered", result));
-                return;
-            }
-                break;
-            case "Edit": {
-                if (en == null || en.length == 0) {
-                    res.end(Response("FAIL", "Empty English field", null));
-                    return;
-                }
-                var rec = findRec(dic, en);
-                if (rec == null) {
-                    //Not found
-                    var result = [];
-                    res.end(Response("FAIL", "Not found", result));
-                    return;
-                }
-
-                //Already exists
-                if (rec != null) {
-                    rec.ru = ru;
-                    rec.cat = cat;
-                }
-
-                //Replace current file with new assignment
-                var sdata = JSON.stringify(data, null, 3);
-                fs.writeFileSync(DIC_FILEPATH(), sdata);
-
-                res.end(Response("OK", "Edited", dic));
-            }
-                break;
-            case "Add": {
-                var o = { "en": "", "ru": "", "cat": "", "sub": "" };
-                o.en = en;
-                o.ru = ru;
-                o.cat = cat;
-                var bok = dicAdd(res, dic, o);
-                if (bok) {
-                    //Save in file
-                    var sdata = JSON.stringify(data, null, 3);
-                    fs.writeFileSync(DIC_FILEPATH(), sdata);
-
-                    var result = Filter(dic, "", "", o.cat);
-                    res.end(Response("OK", "Added", result));
-                }
-            }
-                break;
-            default:
-                break;
-        }
-    });
-
-});
 
 //parse the string lines and convert to json
 function ConvertJSON(text) {

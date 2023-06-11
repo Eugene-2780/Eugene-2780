@@ -1,0 +1,41 @@
+.boxed {
+    border-style: dashed;
+    border-width: thin;
+    border-color: lime;
+}
+
+.audio_box {
+    width: 80%;
+    height: 100%;
+    border: 5px solid green;
+}
+
+.check_box {
+    width: 200px;
+    height: 100%;
+    border: 5px solid green;
+    text-align: center;
+}
+
+.menu_table{
+    width:1000;
+    border-style: dashed;
+    border-width: thin;
+    border-color: green;
+    background-color:beige;
+} 
+
+.screen_table{
+    width:1000px;
+    height:800px;
+    border-width: thick;
+}
+
+.audio_table{
+    width:100%;
+} 
+
+
+.player{
+    width:100%;
+}
