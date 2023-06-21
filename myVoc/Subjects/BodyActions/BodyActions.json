@@ -12,14 +12,14 @@
          "ru": "сморкаться",
          "cat": "",
          "status": "",
-         "state": ""
+         "state": "hidden"
       },
       {
          "en": "drool",
          "ru": "пускать слюни",
          "cat": "",
          "status": "",
-         "state": ""
+         "state": "hidden"
       },
       {
          "en": "blush",
@@ -33,14 +33,14 @@
          "ru": "зевать",
          "cat": "",
          "status": "",
-         "state": ""
+         "state": "hidden"
       },
       {
          "en": "shrug",
          "ru": "пожимание плечами",
          "cat": "",
          "status": "",
-         "state": ""
+         "state": "hidden"
       },
       {
          "en": "clap",
@@ -75,28 +75,28 @@
          "ru": "присесть",
          "cat": "",
          "status": "",
-         "state": ""
+         "state": "hidden"
       },
       {
          "en": "stomp",
          "ru": "топать",
          "cat": "",
          "status": "",
-         "state": ""
+         "state": "hidden"
       },
       {
          "en": "stumble",
          "ru": "спотыкаться",
          "cat": "",
          "status": "",
-         "state": ""
+         "state": "hidden"
       },
       {
          "en": "slip",
          "ru": "соскальзывать",
          "cat": "",
          "status": "",
-         "state": ""
+         "state": "hidden"
       }
    ]
 }

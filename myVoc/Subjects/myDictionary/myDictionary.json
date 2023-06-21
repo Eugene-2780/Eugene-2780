@@ -355,7 +355,7 @@
       {
          "en": "unconscionable",
          "ru": "бессовестный",
-         "cat": "Other",
+         "cat": "Trait",
          "sub": "",
          "status": "",
          "state": ""
@@ -467,6 +467,158 @@
       {
          "en": "wary",
          "ru": "осторожный",
+         "cat": "Other",
+         "sub": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "grin",
+         "ru": "ухмыляться",
+         "cat": "Emotions",
+         "sub": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "wicked",
+         "ru": "злой",
+         "cat": "Emotions",
+         "sub": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "scorn",
+         "ru": "презрение",
+         "cat": "Emotions",
+         "sub": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "Contempt",
+         "ru": "презрение",
+         "cat": "Emotions",
+         "sub": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "confession",
+         "ru": "признание",
+         "cat": "Emotions",
+         "sub": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "temptation",
+         "ru": "искушение, соблазн",
+         "cat": "Emotions",
+         "sub": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "dignity",
+         "ru": "достоинство",
+         "cat": "Emotions",
+         "sub": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "faint",
+         "ru": "слабый",
+         "cat": "Emotions",
+         "sub": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "diligent",
+         "ru": "прилежный, старательный",
+         "cat": "Trait",
+         "sub": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "bow",
+         "ru": "поклон",
+         "cat": "Other",
+         "sub": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "conscience",
+         "ru": "совесть",
+         "cat": "Other",
+         "sub": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "hypocrisy",
+         "ru": "лицемерие",
+         "cat": "Trait",
+         "sub": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "conscious",
+         "ru": "сознательный",
+         "cat": "Other",
+         "sub": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "ridiculed",
+         "ru": "осмеян",
+         "cat": "Emotions",
+         "sub": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "marginalized",
+         "ru": "a person, group, or concept treated as insignificant or peripheral",
+         "cat": "Emotions",
+         "sub": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "toppled",
+         "ru": "свергнут",
+         "cat": "Other",
+         "sub": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "utter",
+         "ru": "полный, крайний",
+         "cat": "Other",
+         "sub": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "resembles",
+         "ru": "напоминает,  It has nickname \"balalaika\", because its planform resembles the stringed musical instrument of the same name;",
+         "cat": "Other",
+         "sub": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "potent",
+         "ru": "мощный",
          "cat": "Other",
          "sub": "",
          "status": "",

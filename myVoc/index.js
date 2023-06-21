@@ -1,6 +1,6 @@
 const express = require('express')
 const app = express()
-const port = 3000
+const port = 80
 
 const path = require('path');
 const bodyParser = require('body-parser')
@@ -142,7 +142,7 @@ function HTMLBegin() {
 
 function HTMLAddRow(rec, nIndex, bRuVisible, bEnVisible) {
 
-    var style = "";
+    var style = "", styleIndex = "";
     var nIndexWord = rec.status.indexOf(_STATUS_WORD);
     var nIndexNote = rec.status.indexOf(_STATUS_NOTE);
     var bHidden = rec.state == _STATE_HIDDEN;
@@ -151,12 +151,13 @@ function HTMLAddRow(rec, nIndex, bRuVisible, bEnVisible) {
         style += "color:Blue;"
     }
     if (nIndexNote >= 0) {
-        style += "background-color:Ivory;"
+        style += "color:brown;"
+//        style += "background-color:Ivory;"
     }
 
     var row = "<tr  id=\"" + 'ROW' + nIndex + "\" >";
     //Index
-    var td = "<td width='5%'><input type='radio' id='RADIO" + nIndex + "' name='group' value='" + nIndex + "' >" + nIndex + "</td>";
+    var td = "<td width='5%' style='" + styleIndex + "' ><input type='radio' id='RADIO" + nIndex + "' name='group' value='" + nIndex + "' >" + nIndex + "</td>";
     row = row.concat(td);
     //English
     if (bEnVisible) {
@@ -312,7 +313,7 @@ function updateConfig(hidden) {
 
 app.get('/Subjects', function (req, res) {
 
-    LogParams(req, "Subjects");
+    LogParams(req, "Subjects Get");
 
     var cmd = req.query.cmd;
 
