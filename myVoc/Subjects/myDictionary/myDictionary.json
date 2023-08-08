@@ -467,7 +467,7 @@
       {
          "en": "wary",
          "ru": "осторожный",
-         "cat": "Other",
+         "cat": "Trait",
          "sub": "",
          "status": "",
          "state": ""
@@ -619,6 +619,150 @@
       {
          "en": "potent",
          "ru": "мощный",
+         "cat": "Other",
+         "sub": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "trellis",
+         "ru": "шпалера",
+         "cat": "Other",
+         "sub": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "ripe",
+         "ru": "спелый",
+         "cat": "Other",
+         "sub": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "contradict",
+         "ru": "противоречить",
+         "cat": "Other",
+         "sub": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "frantically",
+         "ru": "отчаянно",
+         "cat": "Other",
+         "sub": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "redundant",
+         "ru": "избыточный",
+         "cat": "Other",
+         "sub": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "out of place",
+         "ru": "невпопад",
+         "cat": "",
+         "sub": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "not to the point",
+         "ru": "не по делу",
+         "cat": "Other",
+         "sub": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "depleting ",
+         "ru": "истощение",
+         "cat": "Other",
+         "sub": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "invincible",
+         "ru": "непобедимый",
+         "cat": "Other",
+         "sub": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "inevitable",
+         "ru": "неизбежный",
+         "cat": "Other",
+         "sub": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "flock",
+         "ru": "стадо",
+         "cat": "Other",
+         "sub": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "rot",
+         "ru": "гниль",
+         "cat": "Other",
+         "sub": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "indecency",
+         "ru": "непристойность",
+         "cat": "Other",
+         "sub": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "premature",
+         "ru": "преждевременный",
+         "cat": "Other",
+         "sub": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "raging",
+         "ru": "бушующий",
+         "cat": "Other",
+         "sub": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "converge",
+         "ru": "сходятся",
+         "cat": "Other",
+         "sub": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "reconnaissance",
+         "ru": "разведка",
+         "cat": "Other",
+         "sub": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "inlet",
+         "ru": "вход",
          "cat": "Other",
          "sub": "",
          "status": "",
