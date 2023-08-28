@@ -41,6 +41,7 @@
             <td style="width:400px">
                 <input style="width:300px" type="text" value="" id="ru" name="ru" />
                 <input type="button" name="button" value="Clear" onclick="document.getElementById('ru').value = ''" />
+                <input type="button" name="button" value="Search" onclick="doSearch()" />
             </td>
             <td align='center'> <input style="width:140px;" type="submit" name="button" value="Update"
                     onclick="doEdit()" />
@@ -51,8 +52,10 @@
             <td style="width:400px">
                 <select style="width:308px" id="cat" name="cat" title="GGG" value="All"
                     onchange="onCategoryTopicChange(event)">
-                    <option value="Emotions">Emotions</option>
                     <option value="Trait">Trait</option>
+                    <option value="Personality">Personality</option>
+                    <option value="Thinking ">Thinking</option>
+                    <option value="Emotions">Emotions</option>
                     <option value="Expression">Expression</option>
                     <option value="Other">Other</option>
                     <option value="">All</option>
@@ -128,8 +131,9 @@
             var bEnVisible = true;
             var bHidVisible = true;
             var cat = document.getElementById('cat').value;
+            var en = document.getElementById('en').value;
 
-            var filter = "&bRuVisible=" + bRuVisible + "&bEnVisible=" + bEnVisible + "&bHidVisible=" + bHidVisible + "&cat=" + cat;
+            var filter = "&bRuVisible=" + bRuVisible + "&bEnVisible=" + bEnVisible + "&bHidVisible=" + bHidVisible + "&cat=" + cat + "&en=" + en;
             let data_filter = data + filter;
             var oReq = new XMLHttpRequest();
             oReq.addEventListener("load", ajaxShowResponse);
@@ -175,7 +179,11 @@
             var body = JSON.stringify(body);
             return body
         }
-
+        
+        function doSearch(){
+            var args = "cmd=Search";
+            ajaxGet("/Subjects", args);
+        }
         function onInit() {
             Play('welcome');
             reqTopics();

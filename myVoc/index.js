@@ -15,7 +15,12 @@ app.use(express.static('public'));
 const { isNullOrUndefined } = require('util');
 
 const MP3_FOLDER = __dirname + "/mp3/";
-const SUBJECTS_FOLDER = __dirname + "/Subjects/";
+const SUBJECTS_FOLDER = path.join(__dirname ,"Subjects");
+
+function FILE_PATH_JSON(topic){
+    let v = path.join(SUBJECTS_FOLDER,topic, topic +".json");
+    return v;
+} 
 
 const _STATUS_WORD = "word";
 const _STATUS_NOTE = "note";
@@ -152,7 +157,6 @@ function HTMLAddRow(rec, nIndex, bRuVisible, bEnVisible) {
     }
     if (nIndexNote >= 0) {
         style += "color:brown;"
-//        style += "background-color:Ivory;"
     }
 
     var row = "<tr  id=\"" + 'ROW' + nIndex + "\" >";
@@ -247,6 +251,47 @@ function Filter(dic, en, ru, cat) {
     return result;
 }
 
+function SearchWithFilter(dic, en, file) {
+    var result = [];
+    for (var i = 0; i < dic.length; i++) {
+        var rec = dic[i];
+        if(rec.en == undefined){
+            continue;
+        }
+        let bEn = en == undefined || en.length == 0 || rec.en.indexOf(en) == 0;
+        if (bEn){
+            rec.ru = "[" + file + "]......." + rec.ru;
+            result.push(rec);
+       }
+    }
+    return result;
+}
+
+function SearchTopics(dir, en) {
+    var files = fs.readdirSync(dir);
+
+    let dic = [];
+
+    files.forEach(file => {
+        var pathname = path.join(dir,file);
+        if (fs.lstatSync(pathname).isDirectory()) {
+
+            var filePathJson = FILE_PATH_JSON(file);
+            if (fs.existsSync(filePathJson)) {
+                var data = fs.readFileSync(filePathJson);
+                var json = JSON.parse(data);
+                var result = SearchWithFilter(json.dic,en,file);
+                if(result.length > 0){
+                    dic = dic.concat(result);
+                }
+            }
+        }
+    })
+
+    return dic;
+}
+
+
 //parse the string lines and convert to json
 function ConvertJSON(text) {
     let str = text;
@@ -316,16 +361,27 @@ app.get('/Subjects', function (req, res) {
     LogParams(req, "Subjects Get");
 
     var cmd = req.query.cmd;
+    var en = req.query.en;
 
     switch (cmd) {
-        case "Read_file":
+        case "Search":
+            {
+                var json = { "dic": [] };
+                let result  = SearchTopics(SUBJECTS_FOLDER, en);
+                var html = ConvertToHTML(result, true, true, true);
+                return res.end(Response("HTML", result.length, html));
+
+//                return res.end(Response("Search", "Folders", dic));
+            }
+            break;
+    case "Read_file":
             {
                 var filename = req.query.filename;
 
                 if (filename == null || filename.length == 0) {
                     return res.end(Response("FAIL", "File name field is empty", null));
                 }
-                var filePath = SUBJECTS_FOLDER + filename;
+                var filePath = path.join(SUBJECTS_FOLDER,filename);
                 if (!fs.existsSync(filePath)) {
                     return res.end(Response("FAIL", "File not found ==> " + filePath, null));
                 }
@@ -341,7 +397,7 @@ app.get('/Subjects', function (req, res) {
                 if (index == null || index < 0) {
                     return res.end(Response("FAIL", "Index is wrong", null));
                 }
-                var filePathJson = SUBJECTS_FOLDER + topic + "/" + topic + ".json";
+                var filePathJson = FILE_PATH_JSON(topic);
 
                 if (!fs.existsSync(filePathJson)) {
                     return res.end(Response("FAIL", "File not found ==> " + filePathJson, null));
@@ -389,9 +445,9 @@ app.get('/Subjects', function (req, res) {
                     return res.end(Response("FAIL", "Topic field is empty", null));
                 }
 
-                var filePath = SUBJECTS_FOLDER + topic + "/" + topic + ".txt";
+                var filePath = path.join(SUBJECTS_FOLDER,topic,topic,".txt");
                 //If json file is missing, then create json
-                var filePathJson = SUBJECTS_FOLDER + topic + "/" + topic + ".json";
+                var filePathJson = FILE_PATH_JSON(topic);
                 if (!fs.existsSync(filePathJson)) {
                     if (!fs.existsSync(filePath)) {
                         return res.end(Response("FAIL", "Topic not found ==> " + filePath, null));
@@ -443,7 +499,7 @@ app.post('/Subjects', function (req, res) {
                 const bEnVisible = (req.body.bEnVisible == true);
                 const bHidVisible = (req.body.bHidVisible == true);
                 const topic = req.body.topic;
-                const filePathJson = SUBJECTS_FOLDER + topic + "/" + topic + ".json";
+                var filePathJson = FILE_PATH_JSON(topic);
 
                 if (!fs.existsSync(filePathJson)) {
                     return res.end(Response("FAIL", "File not found ==> " + filePathJson, null));
@@ -502,7 +558,7 @@ app.post('/Subjects', function (req, res) {
                     return;
                 }
 
-                const filePathJson = SUBJECTS_FOLDER + topic + "/" + topic + ".json";
+                var filePathJson = FILE_PATH_JSON(topic);
                 var data = fs.readFileSync(filePathJson);
 
                 var json = JSON.parse(data);
@@ -541,7 +597,7 @@ app.post('/Subjects', function (req, res) {
                     return;
                 }
 
-                const filePathJson = SUBJECTS_FOLDER + topic + "/" + topic + ".json";
+                var filePathJson = FILE_PATH_JSON(topic);
                 var data = fs.readFileSync(filePathJson);
 
                 var json = JSON.parse(data);
