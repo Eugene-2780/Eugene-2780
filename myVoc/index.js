@@ -15,12 +15,12 @@ app.use(express.static('public'));
 const { isNullOrUndefined } = require('util');
 
 const MP3_FOLDER = __dirname + "/mp3/";
-const SUBJECTS_FOLDER = path.join(__dirname ,"Subjects");
+const SUBJECTS_FOLDER = path.join(__dirname, "Subjects");
 
-function FILE_PATH_JSON(topic){
-    let v = path.join(SUBJECTS_FOLDER,topic, topic +".json");
+function FILE_PATH_JSON(topic) {
+    let v = path.join(SUBJECTS_FOLDER, topic, topic + ".json");
     return v;
-} 
+}
 
 const _STATUS_WORD = "word";
 const _STATUS_NOTE = "note";
@@ -173,10 +173,10 @@ function HTMLAddRow(rec, nIndex, bRuVisible, bEnVisible) {
     row = row.concat(td);
     //Russian
     if (bRuVisible) {
-        td = "<td id=\"" + 'R' + nIndex + "\" >" + rec.ru + "</td>";
+        td = "<td id=\"" + 'R' + nIndex + "\"  > <p style=\"font-family:'Consolas' \">" + rec.ru + "</p></td>";
     }
     else {
-        td = "<td id=\"" + 'R' + nIndex + "\" >" + "</td>";
+        td = "<td id=\"" + 'R' + nIndex + "\"  >" + "</td>";
     }
     row = row.concat(td);
     //Category
@@ -255,14 +255,21 @@ function SearchWithFilter(dic, en, file) {
     var result = [];
     for (var i = 0; i < dic.length; i++) {
         var rec = dic[i];
-        if(rec.en == undefined){
+        if (rec.en == undefined) {
             continue;
         }
         let bEn = en == undefined || en.length == 0 || rec.en.indexOf(en) == 0;
-        if (bEn){
-            rec.ru = "[" + file + "]......." + rec.ru;
+        if (bEn) {
+            let empty = "";
+            let ru = rec.ru + "";
+            let pad_length = 45 - rec.ru.length;
+            let pad = empty.padEnd(pad_length, ".");
+            let rup = ru + pad; // to have real length
+            let topic = file;
+            rec.ru = "" + rup + "{" + topic + "";
+
             result.push(rec);
-       }
+        }
     }
     return result;
 }
@@ -273,15 +280,15 @@ function SearchTopics(dir, en) {
     let dic = [];
 
     files.forEach(file => {
-        var pathname = path.join(dir,file);
+        var pathname = path.join(dir, file);
         if (fs.lstatSync(pathname).isDirectory()) {
 
             var filePathJson = FILE_PATH_JSON(file);
             if (fs.existsSync(filePathJson)) {
                 var data = fs.readFileSync(filePathJson);
                 var json = JSON.parse(data);
-                var result = SearchWithFilter(json.dic,en,file);
-                if(result.length > 0){
+                var result = SearchWithFilter(json.dic, en, file);
+                if (result.length > 0) {
                     dic = dic.concat(result);
                 }
             }
@@ -361,27 +368,37 @@ app.get('/Subjects', function (req, res) {
     LogParams(req, "Subjects Get");
 
     var cmd = req.query.cmd;
-    var en = req.query.en;
+    var enSearch = req.query.enSearch;
 
     switch (cmd) {
         case "Search":
             {
                 var json = { "dic": [] };
-                let result  = SearchTopics(SUBJECTS_FOLDER, en);
+                let result = SearchTopics(SUBJECTS_FOLDER, enSearch);
+                result.sort((a, b) => {
+                    const nameA = a.en.toUpperCase();
+                    const nameB = b.en.toUpperCase();
+                    if (nameA < nameB) {
+                        return -1;
+                    }
+                    if (nameA > nameB) {
+                        return 1;
+                    }
+                    // names must be equal
+                    return 0;
+                });
                 var html = ConvertToHTML(result, true, true, true);
                 return res.end(Response("HTML", result.length, html));
-
-//                return res.end(Response("Search", "Folders", dic));
-            }
+           }
             break;
-    case "Read_file":
+        case "Read_file":
             {
                 var filename = req.query.filename;
 
                 if (filename == null || filename.length == 0) {
                     return res.end(Response("FAIL", "File name field is empty", null));
                 }
-                var filePath = path.join(SUBJECTS_FOLDER,filename);
+                var filePath = path.join(SUBJECTS_FOLDER, filename);
                 if (!fs.existsSync(filePath)) {
                     return res.end(Response("FAIL", "File not found ==> " + filePath, null));
                 }
@@ -445,7 +462,7 @@ app.get('/Subjects', function (req, res) {
                     return res.end(Response("FAIL", "Topic field is empty", null));
                 }
 
-                var filePath = path.join(SUBJECTS_FOLDER,topic,topic,".txt");
+                var filePath = path.join(SUBJECTS_FOLDER, topic, topic, ".txt");
                 //If json file is missing, then create json
                 var filePathJson = FILE_PATH_JSON(topic);
                 if (!fs.existsSync(filePathJson)) {
@@ -478,7 +495,7 @@ app.get('/Subjects', function (req, res) {
     return res.end(Response("FAIL", "Wrong command ==> " + cmd, null));
 })
 
-function ToHTML(dic, category,){
+function ToHTML(dic, category,) {
     var result = Filter(dic, "", "", category);
     applyMp3FileExists(result);
     return ConvertToHTML(result, true, true, true);
@@ -582,7 +599,7 @@ app.post('/Subjects', function (req, res) {
                 fs.writeFileSync(filePathJson, sdata);
 
                 var html = ToHTML(dic, cat);
-    
+
                 return res.end(Response("HTML", json.dic.length, html));
             }
             break;
@@ -611,7 +628,7 @@ app.post('/Subjects', function (req, res) {
                     fs.writeFileSync(filePathJson, sdata);
 
                     var html = ToHTML(dic, cat);
-    
+
                     return res.end(Response("HTML", json.dic.length, html));
                 }
             }
