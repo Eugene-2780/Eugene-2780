@@ -387,6 +387,8 @@ app.get('/Subjects', function (req, res) {
                     // names must be equal
                     return 0;
                 });
+                applyMp3FileExists(result);
+
                 var html = ConvertToHTML(result, true, true, true);
                 return res.end(Response("HTML", result.length, html));
            }

@@ -18,7 +18,11 @@
                 <input style="width:100px" type="text" value="" id="enSearch" name="enSearch" autocomplete="off" onchange="onEnChange()" />
                 <input type="button" name="button" value="Search" onclick="doSearch()" />
             </td>
-        </tr>
+            <td style="width:20%">
+                <video controls="" autoplay="" name="media" id="mediaplayer" src="" type="audio/mpeg" width="100%"
+                    height="30"></video>
+            </td>
+   </tr>
     </table>
     <!--Response Table-->
     <table width='100%' height='500' border=1>
@@ -178,6 +182,7 @@
         function Play(en) {
             var media = document.getElementById('mediaplayer');
             media.src = "/play?en=" + en;
+            //alert(en)
             media.play();
         }
 
