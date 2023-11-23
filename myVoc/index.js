@@ -16,6 +16,8 @@ const { isNullOrUndefined } = require('util');
 
 const MP3_FOLDER = __dirname + "/mp3/";
 const SUBJECTS_FOLDER = path.join(__dirname, "Subjects");
+const STORIES_FOLDER = path.join(__dirname, "Stories");
+const ROOT_FOLDER = __dirname;
 
 function FILE_PATH_JSON(topic) {
     let v = path.join(SUBJECTS_FOLDER, topic, topic + ".json");
@@ -105,30 +107,6 @@ function dicAdd(res, dic, inRec) {
     dic.push(o);
     return true;
 }
-
-app.get('/', function (req, res) {
-    res.sendFile(__dirname + "/index.html");
-});
-
-/*
-Returns file.mp3 to client
-*/
-app.get('/play', function (req, res) {
-    var s = "req.query : " + JSON.stringify(req.query, null, 3) + "\n";
-    console.log("Play ==> " + s);
-
-    var en = req.query.en;
-    if (en == null || en.length == 0) {
-        return res.end(Response("FAIL", "English field is empty", null));
-    }
-    var file = en + ".mp3";
-
-    var filePath = MP3_FOLDER + file;
-    if (!fs.existsSync(filePath)) {
-        return res.end(Response("FAIL", "File not found ==> " + file, null));
-    }
-    res.sendFile(filePath);
-})
 
 function HTMLBegin() {
     var html = "<HTML>\n<BODY>\n<TABLE style=\"width:100%\" border=1 >\n";
@@ -362,6 +340,115 @@ function updateConfig(hidden) {
     fs.writeFileSync(CONFIG_FILEPATH(), data);
     return data;
 }
+app.get('/', function (req, res) {
+    res.sendFile(__dirname + "/index.html");
+});
+
+/*
+Returns file.mp3 to client
+*/
+
+app.get('/play', function (req, res) {
+    var s = "req.query : " + JSON.stringify(req.query, null, 3) + "\n";
+    console.log("Play ==> " + s);
+
+    var en = req.query.en;
+    if (en == null || en.length == 0) {
+        return res.end(Response("FAIL", "English field is empty", null));
+    }
+    var file = en + ".mp3";
+
+    var filePath = MP3_FOLDER + file;
+    if (!fs.existsSync(filePath)) {
+        return res.end(Response("FAIL", "File not found ==> " + file, null));
+    }
+    res.sendFile(filePath);
+})
+
+app.get('/ReadFile', function (req, res) {
+    var s = "req.query : " + JSON.stringify(req.query, null, 3) + "\n";
+    console.log("ReadFile ==> " + s);
+
+    var folder = req.query.folder;
+    var filename = req.query.filename;
+
+    if (filename == null || filename.length == 0) {
+        return res.end(Response("FAIL", "Filename field is empty", null));
+    }
+
+    var filePath = path.join(ROOT_FOLDER,folder,filename);
+    if (!fs.existsSync(filePath)) {
+        return res.end(Response("FAIL", "File not found ==> " + filePath, null));
+    }
+    res.sendFile(filePath);
+})
+
+app.get('/Stories', function (req, res) {
+
+    LogParams(req, "Stories Get");
+
+    var cmd = req.query.cmd;
+    var enSearch = req.query.enSearch;
+
+    switch (cmd) {
+        case "Read_file":
+            {
+                var filename = req.query.filename;
+
+                if (filename == null || filename.length == 0) {
+                    return res.end(Response("FAIL", "File name field is empty", null));
+                }
+                var filePath = path.join(STORIES_FOLDER, filename);
+                if (!fs.existsSync(filePath)) {
+                    return res.end(Response("FAIL", "File not found ==> " + filePath, null));
+                }
+                return res.sendFile(filePath);
+            }
+            break;
+        case "Read_mp3_file":
+            {
+                var filename = req.query.filename;
+
+                if (filename == null || filename.length == 0) {
+                    return res.end(Response("FAIL", "File name field is empty", null));
+                }
+                var filePath = MP3_FOLDER + filename;
+                if (!fs.existsSync(filePath)) {
+                    return res.end(Response("FAIL", "File not found ==> " + filePath, null));
+                }
+                return res.sendFile(filePath);
+            }
+            break;
+        case "Read_all_topics": // Browse all folders
+            {
+                var dic = [];
+                var filePath = STORIES_FOLDER;
+                CollectTopics(filePath, dic);
+                return res.end(Response("STORIES", "Folders", dic));
+            }
+            break;
+        case "Read_topic":
+            {
+                const topic = req.query.topic;
+                 var json = { "dic": [] };
+                //Check the topic
+                if (topic == null || topic.length == 0) {
+                    return res.end(Response("FAIL", "Topic field is empty", null));
+                }
+
+                var filePath = path.join(STORIES_FOLDER, topic, topic + ".html");
+                var html = fs.readFileSync(filePath,'utf8');
+                console.log(filePath);
+                console.log(html);
+                return res.end(Response("HTML", html.length, html));
+            }
+            break;
+        default:
+            break;
+    }
+
+    return res.end(Response("FAIL", "Wrong command ==> " + cmd, null));
+})
 
 app.get('/Subjects', function (req, res) {
 

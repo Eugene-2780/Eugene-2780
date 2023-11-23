@@ -11,7 +11,7 @@
 <body onload="onInit()">
         <table align="center" width='100%' border=2>
             <tr>
-                <th width="50;" id="cap_">Subjects:</th>
+                <th width="50;" id="cap_">Stories:</th>
                 <td width="100;" align="left">
                     <select id="Topics" name="Topics" title="TTT" onchange="onTopicChange(event)"
                         style="width:100%; height:40px;">
@@ -57,7 +57,7 @@
                     var html = dic;
                     doc.write(html);
                 }
-                else if (json.Status == "SUBJECTS") {
+                else if (json.Status == "STORIES") {
                     //Populate select options
                     var Topics = document.getElementById("Topics");
                     for (var i = 0; i < dic.length; i++) {
@@ -128,23 +128,27 @@
                     "bRuVisible": bRuVisible, "bEnVisible": bEnVisible, "bHidVisible": bHidVisible
                 };
                 var body = JSON.stringify(body);
-                ajaxPost("/Subjects", body);
+                ajaxPost("/Stories", body);
             }
 
             function onInit() {
                 reqGetConfig(); // Config first
                 reqTopics();
                 Play("welcome.mp3");
+                // var topic = document.getElementById('Topics').value;
+                // var file = topic + ".mp3";
+                // Play(file);
+                // alert(file)
             }
 
             function reqTopics() {
                 var args = "cmd=Read_all_topics";
-                ajaxGet("/Subjects", args);
+                ajaxGet("/Stories", args);
             }
 
             function reqTopic(topic) {
                 var args = "cmd=Read_topic&topic=" + topic;
-                ajaxGet("/Subjects", args);
+                ajaxGet("/Stories", args);
             }
 
             function reqCurTopic() {
@@ -190,7 +194,7 @@
                     "bRuVisible": bRuVisible, "bEnVisible": bEnVisible, "bHidVisible": bHidVisible
                 };
                 var body = JSON.stringify(body);
-                ajaxPost("/Subjects", body);
+                ajaxPost("/Stories", body);
                 reqCurTopic();
             }
 
@@ -215,14 +219,14 @@
             function PlayByIndex(index) {
                 var media = document.getElementById('mediaplayer');
                 var topic = document.getElementById('Topics').value;
-                media.src = "/Subjects?cmd=Read_mp3_by_index&topic=" + topic + "&index=" + index;
+                media.src = "/Stories?cmd=Read_mp3_by_index&topic=" + topic + "&index=" + index;
                 media.play();
             }
 
             function Play(filename) {
                 var media = document.getElementById('mediaplayer');
                 var topic = document.getElementById('Topics').value;
-                media.src = "/Subjects?cmd=Read_mp3_file&filename=" + filename;
+                media.src = "/Stories?cmd=Read_mp3_file&filename=" + filename;
                 media.play();
             }
 
@@ -232,14 +236,19 @@
             }
 
             function onTopicChange(e) {
-                var text = e.target.value;
-                reqTopic(text);
+                var topic = e.target.value;
+                reqTopic(topic);
+                var file = topic + ".mp3";
+                Play(file);
             }
 
             function onCbChange(e) {
                 var text = e.target.checked;
                 var topic = document.getElementById('Topics').value;
                 reqTopic(topic)
+                var file = topic + ".mp3";
+                Play(file);
+ alert('ccc')
             }
         </script>
 </body>
