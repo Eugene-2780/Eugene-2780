@@ -783,6 +783,22 @@
          "sub": "",
          "status": "",
          "state": ""
+      },
+      {
+         "en": "belittled",
+         "ru": "приниженный",
+         "cat": "Personality",
+         "sub": "",
+         "status": "",
+         "state": ""
+      },
+      {
+         "en": "excluded ",
+         "ru": "Исключенный",
+         "cat": "Personality",
+         "sub": "",
+         "status": "",
+         "state": ""
       }
    ]
 }
