@@ -39,3 +39,8 @@
 .player{
     width:100%;
 }
+
+div{
+    font-family:'Arial'; 
+    font-size:18px;
+}

@@ -9,248 +9,258 @@
 </head>
 
 <body onload="onInit()">
-        <table align="center" width='100%' border=2>
-            <tr>
-                <th width="50;" id="cap_">Stories:</th>
-                <td width="100;" align="left">
-                    <select id="Topics" name="Topics" title="TTT" onchange="onTopicChange(event)"
-                        style="width:100%; height:40px;">
-                    </select>
-                </td>
-                <td style="width:20%">
-                    <video controls="" autoplay="" name="media" id="mediaplayer" src="" type="audio/mpeg" width="100%"
-                        height="30"></video>
-                </td>
-                <td style=" width:10%">
-                    <input type='checkbox' id='idEnCheckbox' name="group2" checked onchange="onCbChange(event)">
-                    English</input>
-                </td>
-                <td style="width:10%">
-                    <input type='checkbox' id='idRuCheckbox' name="group2" checked
-                        onchange="onCbChange(event)">Russian</input>
-                </td>
-                <td style="width:10%">
-                    <input type='checkbox' id='idHiddenCheckbox' name="g" checked
-                        onchange="reqPutConfig()">Hidden</input>
-                </td>
-                <td style="width:10%">
-                    <input style="width:100%;" type="submit" name="button" value="Play All"
-                        onclick="onButtonPlayLoop()" />
-                    <input style="width:100%;" type="submit" name="button" value="Stop All"
-                        onclick="onButtonStopLoop()" />
-                </td>
-            </tr>
-        </table>
+    <table align="center" width='100%' border=2>
+        <tr>
+            <th width="50;" id="cap_">Stories:</th>
+            <td width="100;" align="left">
+                <select id="Topics" name="Topics" title="TTT" onchange="onTopicChange(event)"
+                    style="width:100%; height:40px;">
+                </select>
+            </td>
+            <td style="width:20%">
+                <video controls="" autoplay="" name="media" id="mediaplayer" src="" type="audio/mpeg" width="100%"
+                    height="30"></video>
+            </td>
+            <td style=" width:10%">
+                <input type='checkbox' id='idEnCheckbox' name="group2" checked onchange="onCbChange(event)">
+                English</input>
+            </td>
+            <td style="width:10%">
+                <input type='checkbox' id='idRuCheckbox' name="group2" checked
+                    onchange="onCbChange(event)">Russian</input>
+            </td>
+            <td style="width:10%">
+                <input type='checkbox' id='idHiddenCheckbox' name="g" checked onchange="reqPutConfig()">Hidden</input>
+            </td>
+            <td style="width:10%">
+                <input style="width:100%;" type="submit" name="button" value="Play All" onclick="onButtonPlayLoop()" />
+                <input style="width:100%;" type="submit" name="button" value="Stop All" onclick="onButtonStopLoop()" />
+            </td>
+        </tr>
+    </table>
 
-        <iframe title="frame" id=rsp name="rsp" width='100%' height='700'></iframe>
+    <iframe title="frame" id=rsp name="rsp" width='100%' height='700' style="font:Tahoma"></iframe>
 
-        <script>
-            var rowCount = 0;
-            function ajaxShowResponse() {
-                var frm = document.getElementById('rsp');
-                var doc = frm.contentDocument;
+    <script>
+        var rowCount = 0;
+        function ajaxShowResponse() {
+            var frm = document.getElementById('rsp');
+            var doc = frm.contentDocument;
 
-                let json = JSON.parse(this.responseText);
-                var dic = json.dic;
-                if (json.Status == "HTML") {
-                    rowCount = json.Count;
-                    var html = dic;
-                    doc.write(html);
+            let json = JSON.parse(this.responseText);
+            var dic = json.dic;
+            if (json.Status == "HTML") {
+                rowCount = json.Count;
+                var html = dic;
+                doc.write(html);
+            }
+            else if (json.Status == "STORIES") {
+                //Populate select options
+                var Topics = document.getElementById("Topics");
+                for (var i = 0; i < dic.length; i++) {
+                    var ob = dic[i];
+                    var newOption = document.createElement('option');
+                    var optionText = document.createTextNode(ob);
+                    newOption.appendChild(optionText);
+                    Topics.appendChild(newOption);
                 }
-                else if (json.Status == "STORIES") {
-                    //Populate select options
-                    var Topics = document.getElementById("Topics");
-                    for (var i = 0; i < dic.length; i++) {
-                        var ob = dic[i];
-                        var newOption = document.createElement('option');
-                        var optionText = document.createTextNode(ob);
-                        newOption.appendChild(optionText);
-                        Topics.appendChild(newOption);
+                //Request table of 
+                reqTopic(Topics.value);
+                var mp3File =  Topics.value + ".mp3";
+                loadToPlay(mp3File);
+            }
+            else if (json.Status == "CFG") {
+                var Hidden = json.dic[0].Hidden;
+                document.getElementById('idHiddenCheckbox').checked = Hidden;
+            }
+            else {
+                var reply = JSON.stringify(json, null, 3);
+                doc.write(reply);
+            }
+            doc.close();
+
+            if (json.Status == "HTML") {
+                for (var i = 1; i < dic.length + 1; i++) {
+                    var idEn = "E" + i; //English
+                    var idSt = "S" + i; //State
+                    const en = doc.getElementById(idEn);
+                    if (en != null) {
+                        en.addEventListener("click", reqMP3File, false);
+                        en.addEventListener("dblclick", reqMP3SentenceFile, false);
                     }
-                    //Request table of 
-                    reqTopic(Topics.value);
-                }
-                else if (json.Status == "CFG") {
-                    var Hidden = json.dic[0].Hidden;
-                    document.getElementById('idHiddenCheckbox').checked = Hidden;
-                }
-                else {
-                    var reply = JSON.stringify(json, null, 3);
-                    doc.write(reply);
-                }
-                doc.close();
-
-                if (json.Status == "HTML") {
-                    for (var i = 1; i < dic.length + 1; i++) {
-                        var idEn = "E" + i; //English
-                        var idSt = "S" + i; //State
-                        const en = doc.getElementById(idEn);
-                        if (en != null) {
-                            en.addEventListener("click", reqMP3File, false);
-                            en.addEventListener("dblclick", reqMP3SentenceFile, false);
-                        }
-                        const State = doc.getElementById(idSt);
-                        if (State != null) {
-                            State.addEventListener("change", reqHideRow, false);
-                        }
+                    const State = doc.getElementById(idSt);
+                    if (State != null) {
+                        State.addEventListener("change", reqHideRow, false);
                     }
                 }
-            }
 
-            function ajaxGet(url, data) {
-                var bRuVisible = document.getElementById('idRuCheckbox').checked;
-                var bEnVisible = document.getElementById('idEnCheckbox').checked;
-                var bHidVisible = document.getElementById('idHiddenCheckbox').checked;
-
-                var filter = "&bRuVisible=" + bRuVisible + "&bEnVisible=" + bEnVisible + "&bHidVisible=" + bHidVisible;
-                let data_filter = data + filter;
-                var oReq = new XMLHttpRequest();
-                oReq.addEventListener("load", ajaxShowResponse);
-                oReq.open("GET", url + "?" + data_filter);
-                oReq.send();
+                setContentFont(doc);
             }
+        }
 
-            function ajaxPost(url, body) {
-                var oReq = new XMLHttpRequest();
-                oReq.addEventListener("load", ajaxShowResponse);
-                oReq.open("POST", url);
-                oReq.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-                oReq.send(body);
-            }
+        function ajaxGet(url, data) {
+            var bRuVisible = document.getElementById('idRuCheckbox').checked;
+            var bEnVisible = document.getElementById('idEnCheckbox').checked;
+            var bHidVisible = document.getElementById('idHiddenCheckbox').checked;
 
-            function reqPost(cmd, topic, en) {
-                var bRuVisible = document.getElementById('idRuCheckbox').checked;
-                var bEnVisible = document.getElementById('idEnCheckbox').checked;
-                var bHidVisible = document.getElementById('idHiddenCheckbox').checked;
-                var body = {
-                    "cmd": cmd, "en": en, "ru": "", "cat": "",
-                    "status": "", "state": "", "topic": topic,
-                    "bRuVisible": bRuVisible, "bEnVisible": bEnVisible, "bHidVisible": bHidVisible
-                };
-                var body = JSON.stringify(body);
-                ajaxPost("/Stories", body);
-            }
+            var filter = "&bRuVisible=" + bRuVisible + "&bEnVisible=" + bEnVisible + "&bHidVisible=" + bHidVisible;
+            let data_filter = data + filter;
+            var oReq = new XMLHttpRequest();
+            oReq.addEventListener("load", ajaxShowResponse);
+            oReq.open("GET", url + "?" + data_filter);
+            oReq.send();
+        }
 
-            function onInit() {
-                reqGetConfig(); // Config first
-                reqTopics();
-                Play("welcome.mp3");
-                // var topic = document.getElementById('Topics').value;
-                // var file = topic + ".mp3";
-                // Play(file);
-                // alert(file)
-            }
+        function ajaxPost(url, body) {
+            var oReq = new XMLHttpRequest();
+            oReq.addEventListener("load", ajaxShowResponse);
+            oReq.open("POST", url);
+            oReq.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            oReq.send(body);
+        }
 
-            function reqTopics() {
-                var args = "cmd=Read_all_topics";
-                ajaxGet("/Stories", args);
-            }
+        function reqPost(cmd, topic, en) {
+            var bRuVisible = document.getElementById('idRuCheckbox').checked;
+            var bEnVisible = document.getElementById('idEnCheckbox').checked;
+            var bHidVisible = document.getElementById('idHiddenCheckbox').checked;
+            var body = {
+                "cmd": cmd, "en": en, "ru": "", "cat": "",
+                "status": "", "state": "", "topic": topic,
+                "bRuVisible": bRuVisible, "bEnVisible": bEnVisible, "bHidVisible": bHidVisible
+            };
+            var body = JSON.stringify(body);
+            ajaxPost("/Stories", body);
+        }
 
-            function reqTopic(topic) {
-                var args = "cmd=Read_topic&topic=" + topic;
-                ajaxGet("/Stories", args);
+        function onInit() {
+            reqGetConfig(); // Config first
+            reqTopics();
+            //Play("welcome.mp3");
+        }
+        //Set font inside text
+        function setContentFont(doc) {
+            var content = doc.getElementById('iframeContent');
+            if (content == null) {
+                return;
             }
+            content.style.fontFamily = "Arial";
+            content.style.fontSize = 20;
+        }
 
-            function reqCurTopic() {
-                var topic = document.getElementById('Topics').value;
-                reqTopic(topic);
-            }
+        function reqTopics() {
+            var args = "cmd=Read_all_topics";
+            ajaxGet("/Stories", args);
+        }
 
-            function reqMP3File(e) {
-                var file = e.target.innerText + ".mp3";
-                Play(file);
-            }
+        function reqTopic(topic) {
+            var args = "cmd=Read_topic&topic=" + topic;
+            ajaxGet("/Stories", args);
+        }
 
-            function reqMP3SentenceFile(e) {
-                var file = e.target.innerText + "--.mp3";
-                Play(file);
-            }
+        function reqCurTopic() {
+            var topic = document.getElementById('Topics').value;
+            reqTopic(topic);
+        }
 
-            function reqHideRow(e) {
-                var cheched = e.target.checked;
-                var target = e.target || e.srcElement;
-                var tableRow = target.parentElement.parentElement;
-                var itemEn = tableRow.children.item(1).innerText;
-                var topic = document.getElementById('Topics').value;
-                if (cheched) {
-                    reqPost("HideItem", topic, itemEn);
-                }
-                else {
-                    reqPost("ShowItem", topic, itemEn);
-                }
-            }
+        function reqMP3File(e) {
+            var file = e.target.innerText + ".mp3";
+            Play(file);
+        }
 
-            function reqGetConfig() {
-                reqPost("GetConfig", "", "");
-            }
+        function reqMP3SentenceFile(e) {
+            var file = e.target.innerText + "--.mp3";
+            Play(file);
+        }
 
-            function reqPutConfig() {
-                var bRuVisible = document.getElementById('idRuCheckbox').checked;
-                var bEnVisible = document.getElementById('idEnCheckbox').checked;
-                var bHidVisible = document.getElementById('idHiddenCheckbox').checked;
-                var body = {
-                    "cmd": "PutConfig", "en": "", "ru": "", "cat": "",
-                    "status": "", "state": "", "topic": "",
-                    "bRuVisible": bRuVisible, "bEnVisible": bEnVisible, "bHidVisible": bHidVisible
-                };
-                var body = JSON.stringify(body);
-                ajaxPost("/Stories", body);
-                reqCurTopic();
+        function reqHideRow(e) {
+            var cheched = e.target.checked;
+            var target = e.target || e.srcElement;
+            var tableRow = target.parentElement.parentElement;
+            var itemEn = tableRow.children.item(1).innerText;
+            var topic = document.getElementById('Topics').value;
+            if (cheched) {
+                reqPost("HideItem", topic, itemEn);
             }
+            else {
+                reqPost("ShowItem", topic, itemEn);
+            }
+        }
 
-            function delay(time) {
-                return new Promise(resolve => setTimeout(resolve, time));
-            }
+        function reqGetConfig() {
+            reqPost("GetConfig", "", "");
+        }
 
-            var loop = true;
-            async function onButtonPlayLoop() {
-                loop = true;
-                for (let i = 0; i < rowCount && loop; i++) {
-                    PlayByIndex(i);
-                    await delay(3000);
-                }
-            }
+        function reqPutConfig() {
+            var bRuVisible = document.getElementById('idRuCheckbox').checked;
+            var bEnVisible = document.getElementById('idEnCheckbox').checked;
+            var bHidVisible = document.getElementById('idHiddenCheckbox').checked;
+            var body = {
+                "cmd": "PutConfig", "en": "", "ru": "", "cat": "",
+                "status": "", "state": "", "topic": "",
+                "bRuVisible": bRuVisible, "bEnVisible": bEnVisible, "bHidVisible": bHidVisible
+            };
+            var body = JSON.stringify(body);
+            ajaxPost("/Stories", body);
+            reqCurTopic();
+        }
 
-            function onButtonStopLoop() {
-                loop = false;
-                Play("welcome.mp3.");
-            }
+        function delay(time) {
+            return new Promise(resolve => setTimeout(resolve, time));
+        }
 
-            function PlayByIndex(index) {
-                var media = document.getElementById('mediaplayer');
-                var topic = document.getElementById('Topics').value;
-                media.src = "/Stories?cmd=Read_mp3_by_index&topic=" + topic + "&index=" + index;
-                media.play();
+        var loop = true;
+        async function onButtonPlayLoop() {
+            loop = true;
+            for (let i = 0; i < rowCount && loop; i++) {
+                PlayByIndex(i);
+                await delay(3000);
             }
+        }
 
-            function Play(filename) {
-                var media = document.getElementById('mediaplayer');
-                var topic = document.getElementById('Topics').value;
-                media.src = "/Stories?cmd=Read_mp3_file&filename=" + filename;
-                media.play();
-            }
+        function onButtonStopLoop() {
+            loop = false;
+            Play("welcome.mp3.");
+        }
 
-            function doPlay() {
-                var en = document.getElementById('en').value;
-                Play(en);
-            }
+        function PlayByIndex(index) {
+            var media = document.getElementById('mediaplayer');
+            var topic = document.getElementById('Topics').value;
+            media.src = "/Stories?cmd=Read_mp3_by_index&topic=" + topic + "&index=" + index;
+            media.play();
+        }
 
-            function onTopicChange(e) {
-                var topic = e.target.value;
-                reqTopic(topic);
-                var file = topic + ".mp3";
-                Play(file);
-            }
+        function loadToPlay(filename) {
+            var media = document.getElementById('mediaplayer');
+            media.src = "/Stories?cmd=Read_mp3_file&filename=" + filename;
+            media.autoplay = false;
+        }
+        function Play(filename) {
+            var media = document.getElementById('mediaplayer');
+            media.src = "/Stories?cmd=Read_mp3_file&filename=" + filename;
+            media.play();
+        }
 
-            function onCbChange(e) {
-                var text = e.target.checked;
-                var topic = document.getElementById('Topics').value;
-                reqTopic(topic)
-                var file = topic + ".mp3";
-                Play(file);
- alert('ccc')
-            }
-        </script>
+        function doPlay() {
+            var en = document.getElementById('en').value;
+            Play(en);
+        }
+
+        function onTopicChange(e) {
+            var topic = e.target.value;
+            reqTopic(topic);
+            var file = topic + ".mp3";
+            Play(file);
+        }
+
+        function onCbChange(e) {
+            var text = e.target.checked;
+            var topic = document.getElementById('Topics').value;
+            reqTopic(topic)
+            var file = topic + ".mp3";
+            Play(file);
+            alert('ccc')
+        }
+    </script>
 </body>
 
 </html>
